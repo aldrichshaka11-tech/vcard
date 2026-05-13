@@ -50,7 +50,11 @@ export function useAuthState() {
           } catch {}
         }
       } catch (err) {
-        if (err.response?.status !== 401) {
+        if (err.response?.status === 401) {
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          setUser(null)
+        } else {
           const cached = localStorage.getItem('user')
           if (cached) try { setUser(JSON.parse(cached)) } catch {}
         }

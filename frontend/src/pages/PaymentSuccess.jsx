@@ -15,6 +15,14 @@ export default function PaymentSuccess() {
 
   useEffect(() => {
     if (!orderId) { navigate('/pricing'); return }
+
+    // If PhonePe redirects with a failure/cancel signal in URL
+    const urlState = searchParams.get('state') || searchParams.get('code') || ''
+    if (urlState && ['PAYMENT_CANCELLED', 'PAYMENT_ERROR', 'FAILED'].includes(urlState.toUpperCase())) {
+      setStatus('failed')
+      return
+    }
+
     const check = async (attempts = 0) => {
       try {
         const res = await api.get(`/pay/status?order_id=${orderId}`)
@@ -23,11 +31,12 @@ export default function PaymentSuccess() {
           setPlan(payment.plan)
           setStatus('success')
           await refreshUser()
-        } else if (payment.status === 'failed') {
+        } else if (payment.status === 'failed' || payment.status === 'cancelled') {
           setStatus('failed')
-        } else if (attempts < 10) {
+        } else if (attempts < 6) {
           setTimeout(() => check(attempts + 1), 2000)
         } else {
+          // After 12 seconds still pending — likely cancelled
           setStatus('failed')
         }
       } catch {
@@ -67,13 +76,26 @@ export default function PaymentSuccess() {
           {status === 'failed' && (
             <div className="space-y-5">
               <XCircle size={64} className="text-red-500 mx-auto" />
-              <h2 className="text-2xl font-bold text-gray-900">Payment Failed</h2>
-              <p className="text-gray-500">Something went wrong. Your account has not been charged.</p>
+              <h2 className="text-2xl font-bold text-gray-900">Payment Cancelled</h2>
+              <p className="text-gray-500">Your payment was not completed. No amount has been charged.</p>
               <button
                 onClick={() => navigate('/pricing')}
                 className="w-full py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all"
               >
                 Try Again
+              </button>
+            </div>
+          )}
+          {status === 'pending' && (
+            <div className="space-y-5">
+              <Loader size={64} className="text-yellow-500 mx-auto" />
+              <h2 className="text-2xl font-bold text-gray-900">Payment Pending</h2>
+              <p className="text-gray-500">Your payment is being processed. Please check back in a few minutes.</p>
+              <button
+                onClick={() => navigate('/pricing')}
+                className="w-full py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all"
+              >
+                Back to Plans
               </button>
             </div>
           )}

@@ -14,8 +14,7 @@ export default function Navbar() {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('smartcard_editor')
-    navigate('/')
-    setMobileMenuOpen(false)
+    window.location.href = '/'
   }
 
   const isActive = (path) => location.pathname === path
@@ -23,7 +22,7 @@ export default function Navbar() {
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 mobile-safe-area">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between">
-        <Link to="/dashboard" className="flex items-center gap-2 sm:gap-2.5 group flex-shrink-0">
+        <Link to="/" className="flex items-center gap-2 sm:gap-2.5 group flex-shrink-0">
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-sm group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
             <CreditCard size={14} className="sm:text-base text-white" />
           </div>

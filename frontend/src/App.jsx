@@ -21,6 +21,21 @@ const Spinner = () => (
   </div>
 )
 
+function GuestRoute({ children }) {
+  const token = localStorage.getItem('token')
+  if (!token) return children
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      return children
+    }
+  } catch {}
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  return <Navigate to={user?.role === 'admin' ? '/admin' : '/dashboard'} replace />
+}
+
 function PrivateRoute({ children }) {
   const { loading, user } = useAuth()
   const token = localStorage.getItem('token')
@@ -69,8 +84,8 @@ export default function App() {
     <BrowserRouter>
       <Suspense fallback={<Spinner />}>
         <Routes>
-          <Route path="/login"     element={<Login />} />
-          <Route path="/register"  element={<Register />} />
+          <Route path="/login"     element={<GuestRoute><Login /></GuestRoute>} />
+          <Route path="/register"  element={<GuestRoute><Register /></GuestRoute>} />
           <Route path="/dashboard" element={<UserRoute><Dashboard /></UserRoute>} />
           <Route path="/editor"    element={<UserRoute><ProfileEditor /></UserRoute>} />
           <Route path="/upgrade"   element={<Navigate to="/pricing" replace />} />
