@@ -37,7 +37,7 @@ def _cfg():
         "env":     os.getenv("PHONEPE_ENV", "PRODUCTION").upper(),
         "id":      os.getenv("PHONEPE_CLIENT_ID", "").strip(),
         "secret":  os.getenv("PHONEPE_CLIENT_SECRET", "").strip(),
-        "version": os.getenv("PHONEPE_CLIENT_VERSION", "1").strip(),
+        "version": int(os.getenv("PHONEPE_CLIENT_VERSION", "1").strip()),
         "redirect": os.getenv("PHONEPE_REDIRECT_URL", "http://localhost:5173/payment/success"),
         "callback": os.getenv("PHONEPE_CALLBACK_URL", ""),
     }
@@ -73,11 +73,12 @@ def _get_access_token() -> str:
             "grant_type":     "client_credentials",
             "client_id":      cfg["id"],
             "client_secret":  cfg["secret"],
-            "client_version": cfg["version"],
+            "client_version": str(cfg["version"]),
         },
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         timeout=10,
     )
+    logger.info("PhonePe token response status=%s body=%s", resp.status_code, resp.text)
     if resp.status_code != 200:
         logger.error("PhonePe token fetch failed: %s %s", resp.status_code, resp.text)
         raise RuntimeError(f"PhonePe auth failed: {resp.status_code} — {resp.text}")
@@ -277,7 +278,8 @@ def initiate_payment(identity):
 # ── POST /api/pay/callback  (PhonePe webhook) ─────────────────────────────────
 @payments_bp.route("/callback", methods=["POST"])
 def payment_callback():
-    raw_body     = request.get_data()
+    raw_body    = request.get_data()
+    auth_header = request.headers.get("Authorization", "")
     cfg = _cfg()
     # Verify webhook signature
     if cfg["secret"] and not _verify_webhook_signature(raw_body, auth_header):

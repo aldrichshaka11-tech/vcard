@@ -26,7 +26,6 @@ export default function Login() {
       localStorage.removeItem('smartcard_editor')
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
-      // Redirect admin to admin panel, others to dashboard
       navigate(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
     } catch (err) {
       setError('root', { message: err.response?.data?.error || 'Login failed.' })
@@ -55,114 +54,106 @@ export default function Login() {
   })
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-white">
 
       {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 flex-col justify-between p-12 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-
+      <div className="hidden lg:flex lg:w-1/2 bg-[#4b98b4] flex-col justify-between p-12 relative">
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src="/favicon.png" alt="Kaira" className="w-10 h-10 object-contain" />
-              <span className="text-white font-bold text-xl tracking-tight">Kaira Technologies</span>
+              <span className="text-white font-black text-2xl tracking-tight uppercase">Kaira</span>
             </div>
-            <Link to="/" className="text-white/70 hover:text-white text-sm transition-colors">← Home</Link>
+            <Link to="/" className="text-white/80 hover:text-white text-sm font-bold transition-colors">← HOME</Link>
           </div>
         </div>
 
-        <div className="relative z-10 space-y-6">
+        <div className="relative z-10 space-y-8">
           <div>
-            <h2 className="text-4xl font-bold text-white leading-tight">Your digital identity,<br />always in your pocket.</h2>
-            <p className="text-white/70 mt-3 text-base leading-relaxed">Create a stunning digital business card and share it instantly with anyone, anywhere.</p>
+            <h2 className="text-5xl font-black text-white leading-[1.1] uppercase">Your digital<br />identity.</h2>
+            <p className="text-white/80 mt-4 text-lg font-bold">Create a stunning digital business card and share it instantly with anyone, anywhere.</p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {[
               { icon: '⚡', text: 'Create your card in under 2 minutes' },
               { icon: '📊', text: 'Track views and engagement in real time' },
               { icon: '🔗', text: 'Share via link, QR code, or NFC' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center text-sm flex-shrink-0">{item.icon}</div>
-                <span className="text-white/80 text-sm">{item.text}</span>
+              <div key={i} className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-lg flex-shrink-0">{item.icon}</div>
+                <span className="text-white/90 font-bold">{item.text}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="relative z-10">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="flex -space-x-2">
-              {['#6366f1','#ec4899','#14b8a6','#f59e0b'].map((c, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-white/30" style={{ background: c }} />
+              {['JD','AS','RK','ML'].map((initial, i) => (
+                <div key={i} className="w-10 h-10 rounded-full border-4 border-[#4b98b4] bg-white/20 flex items-center justify-center text-white text-[10px] font-black">
+                  {initial}
+                </div>
               ))}
             </div>
-            <p className="text-white/70 text-sm">Trusted by <span className="text-white font-semibold">10,000+</span> professionals</p>
+            <p className="text-white/80 text-sm font-bold">Trusted by <span className="text-white">10,000+</span> professionals</p>
           </div>
         </div>
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#f8fafc]">
         <div className="w-full max-w-md">
 
           {/* Mobile logo */}
-          <div className="flex items-center justify-between mb-8 lg:hidden">
+          <div className="flex items-center justify-between mb-10 lg:hidden">
             <div className="flex items-center gap-2">
-              
-              <span className="font-bold text-gray-900 text-lg">Kaira Technologies</span>
+              <span className="font-black text-[#1a1a1a] text-2xl uppercase tracking-tighter">Kaira</span>
             </div>
-            <Link to="/" className="text-sm text-gray-500 hover:text-indigo-600 transition-colors">← Home</Link>
+            <Link to="/" className="text-sm font-black text-gray-400 hover:text-[#c14f3e] transition-colors">← HOME</Link>
           </div>
 
-          {/* Desktop back button */}
-          <div className="hidden lg:flex justify-end mb-6">
-            <Link to="/" className="text-sm text-gray-500 hover:text-indigo-600 transition-colors flex items-center gap-1">← Back to Home</Link>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <div className="mb-7">
-              <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-              <p className="text-gray-500 text-sm mt-1">Sign in to your account to continue</p>
+          <div className="bg-white rounded-[32px] border-2 border-[#f1f5f9] p-10 shadow-sm">
+            <div className="mb-8">
+              <h1 className="text-3xl font-black text-[#1a1a1a] uppercase tracking-tight">Login</h1>
+              <p className="text-gray-400 font-bold text-sm mt-1">Sign in to your professional account</p>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
+                <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2">Email address</label>
                 <div className="relative">
-                  <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                    className="w-full pl-12 pr-4 py-3.5 border-2 border-[#f1f5f9] rounded-2xl text-sm font-black text-[#1a1a1a] placeholder-gray-300 focus:outline-none focus:border-[#c14f3e] transition-all"
                     {...register('email', { required: 'Email is required.' })}
                   />
                 </div>
-                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                {errors.email && <p className="text-red-500 font-bold text-xs mt-1.5">{errors.email.message}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+                <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2">Password</label>
                 <div className="relative">
-                  <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                    className="w-full pl-12 pr-12 py-3.5 border-2 border-[#f1f5f9] rounded-2xl text-sm font-black text-[#1a1a1a] placeholder-gray-300 focus:outline-none focus:border-[#4f46e5] transition-all"
                     {...register('password', { required: 'Password is required.' })}
                   />
-                  <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#c14f3e] transition-colors">
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                {errors.password && <p className="text-red-500 font-bold text-xs mt-1.5">{errors.password.message}</p>}
               </div>
 
               {errors.root && (
-                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
+                <div className="flex items-center gap-3 p-4 bg-red-50 border-2 border-red-100 rounded-2xl text-red-600 text-xs font-bold">
                   <span>⚠</span> {errors.root.message}
                 </div>
               )}
@@ -170,38 +161,38 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition"
+                className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-[#c14f3e] hover:bg-[#a63d2f] disabled:opacity-60 text-white font-black text-sm rounded-2xl transition-all shadow-lg shadow-red-100 uppercase tracking-widest active:scale-95"
               >
                 {isSubmitting ? (
-                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Signing in...</>
+                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> ...</>
                 ) : (
-                  <>Sign In <ArrowRight size={15} /></>
+                  <>Sign In <ArrowRight size={18} /></>
                 )}
               </button>
             </form>
 
-            <div className="flex items-center gap-3 my-5">
-              <div className="flex-1 h-px bg-gray-100" />
-              <span className="text-xs text-gray-400 font-medium">OR</span>
-              <div className="flex-1 h-px bg-gray-100" />
+            <div className="flex items-center gap-4 my-8">
+              <div className="flex-1 h-[2px] bg-[#f1f5f9]" />
+              <span className="text-[10px] text-gray-300 font-black tracking-widest">OR</span>
+              <div className="flex-1 h-[2px] bg-[#f1f5f9]" />
             </div>
 
             <button
               type="button"
               onClick={() => googleLogin()}
               disabled={googleLoading}
-              className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-gray-700 font-medium text-sm rounded-xl transition"
+              className="w-full flex items-center justify-center gap-3 py-3.5 px-6 bg-white border-2 border-[#f1f5f9] hover:border-gray-200 text-[#1a1a1a] font-black text-sm rounded-2xl transition-all active:scale-95"
             >
               {googleLoading
-                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-indigo-500 rounded-full animate-spin" />
+                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-[#c14f3e] rounded-full animate-spin" />
                 : GOOGLE_SVG
               }
-              Continue with Google
+              Google login
             </button>
 
-            <p className="text-center text-sm text-gray-500 mt-6">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-indigo-600 font-semibold hover:text-indigo-700">Create one free</Link>
+            <p className="text-center text-xs font-bold text-gray-400 mt-8">
+              New here?{' '}
+              <Link to="/register" className="text-[#c14f3e] font-black hover:underline uppercase tracking-wide ml-1">Create Account</Link>
             </p>
           </div>
         </div>
