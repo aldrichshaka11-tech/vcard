@@ -63,11 +63,11 @@ def dashboard(identity):
         return json_resp(200, {
             "stats": {
                 "total_users":      total_users,
-                "free_users":       int(by_role.get("free", by_role.get("user", 0))),
-                "premium_users":    int(by_role.get("premium", 0)),
+                "free_users":       int(by_role.get("basic", 0)),
+                "premium_users":    int(by_role.get("pro", 0)) + int(by_role.get("advanced", 0)),
                 "admin_users":      int(by_role.get("admin", 0)),
                 "total_cards":      total_cards,
-                "pending_requests": pending_requests,
+                "pending_requests": 0,
                 "recent_users":     recent_users,
             },
             "recent_activity": recent_activity,
@@ -113,8 +113,8 @@ def list_users(identity):
 
             cur.execute(
                 f"""SELECT id, name, email, slug, role, plan_status,
-                           premium_requested_at, premium_approved_at, created_at,
-                           COALESCE(max_cards, CASE WHEN role='admin' THEN 50 WHEN role='premium' THEN 10 ELSE 1 END) as max_cards
+                           plan_expires_at, created_at,
+                           COALESCE(max_cards, CASE WHEN role='admin' THEN 50 WHEN role='advanced' THEN 10 WHEN role='pro' THEN 3 ELSE 1 END) as max_cards
                     FROM users WHERE {where}
                     ORDER BY created_at DESC
                     LIMIT %s OFFSET %s""",
@@ -271,10 +271,10 @@ def update_user(identity):
     updates: list = []
     params:  list = []
 
-    if "role" in body and body["role"] in ("free", "premium", "admin"):
+    if "role" in body and body["role"] in ("basic", "pro", "advanced", "admin"):
         updates.append("role = %s")
         params.append(body["role"])
-    if "plan_status" in body and body["plan_status"] in (None, "free", "active", "pending"):
+    if "plan_status" in body and body["plan_status"] in (None, "active", "pending", "expired", "cancelled"):
         updates.append("plan_status = %s")
         params.append(body["plan_status"])
     if "is_active" in body:

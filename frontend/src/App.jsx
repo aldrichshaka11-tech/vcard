@@ -63,7 +63,9 @@ function AdminRoute({ children }) {
 
   if (!token) return <Navigate to="/login" replace />
   if (loading) return <Spinner />
-  if (user?.role !== 'admin') return <Navigate to="/dashboard" replace />
+  // Check localStorage user as fallback during loading
+  const cachedRole = user?.role || JSON.parse(localStorage.getItem('user') || '{}')?.role
+  if (cachedRole !== 'admin') return <Navigate to="/dashboard" replace />
 
   return children
 }
@@ -74,8 +76,7 @@ function UserRoute({ children }) {
 
   if (!token) return <Navigate to="/login" replace />
   if (loading) return <Spinner />
-  if (user?.role === 'admin') return <Navigate to="/admin" replace />
-
+  // Admin can access all user routes too
   return children
 }
 

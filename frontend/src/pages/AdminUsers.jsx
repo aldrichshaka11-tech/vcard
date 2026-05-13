@@ -6,12 +6,13 @@ import { useAuth } from '../api/useAuth'
 import Navbar from '../components/Navbar'
 
 const ROLE_STYLES = {
-  admin:   'bg-violet-100 text-violet-700',
-  premium: 'bg-indigo-100 text-indigo-700',
-  free:    'bg-gray-100 text-gray-600',
+  admin:    'bg-violet-100 text-violet-700',
+  advanced: 'bg-indigo-100 text-indigo-700',
+  pro:      'bg-blue-100 text-blue-700',
+  basic:    'bg-gray-100 text-gray-600',
 }
 
-const DEFAULT_MAX_CARDS = { admin: 50, premium: 10, free: 1 }
+const DEFAULT_MAX_CARDS = { admin: 50, advanced: 10, pro: 3, basic: 1 }
 
 export default function AdminUsers() {
   const navigate = useNavigate()
@@ -124,8 +125,9 @@ export default function AdminUsers() {
             className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
           >
             <option value="all">All Roles</option>
-            <option value="free">Free</option>
-            <option value="premium">Premium</option>
+            <option value="basic">Basic</option>
+            <option value="pro">Pro</option>
+            <option value="advanced">Advanced</option>
             <option value="admin">Admin</option>
           </select>
         </div>
@@ -218,8 +220,9 @@ function UserRow({ u, saving, onUpdate, onDelete }) {
           onChange={e => setRole(e.target.value)}
           className={`px-2.5 py-1 rounded-lg text-xs font-semibold border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 ${ROLE_STYLES[role] || ROLE_STYLES.free}`}
         >
-          <option value="free">Free</option>
-          <option value="premium">Premium</option>
+          <option value="basic">Basic</option>
+          <option value="pro">Pro</option>
+          <option value="advanced">Advanced</option>
           <option value="admin">Admin</option>
         </select>
       </td>
@@ -301,10 +304,11 @@ function UserCard({ u, saving, onUpdate, onDelete }) {
           <select
             value={role}
             onChange={e => setRole(e.target.value)}
-            className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold border-0 cursor-pointer focus:outline-none ${ROLE_STYLES[role] || ROLE_STYLES.free}`}
+            className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold border-0 cursor-pointer focus:outline-none ${ROLE_STYLES[role] || ROLE_STYLES.basic}`}
           >
-            <option value="free">Free</option>
-            <option value="premium">Premium</option>
+            <option value="basic">Basic</option>
+            <option value="pro">Pro</option>
+            <option value="advanced">Advanced</option>
             <option value="admin">Admin</option>
           </select>
         </div>

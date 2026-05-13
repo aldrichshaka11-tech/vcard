@@ -58,25 +58,21 @@ export default function Login() {
     <div className="min-h-screen flex">
 
       {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 flex-col justify-between p-12 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-
+      <div className="hidden lg:flex lg:w-1/2 bg-[#4b98b4] flex-col justify-between p-12 relative">
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src="/favicon.png" alt="Kaira" className="w-10 h-10 object-contain" />
-              <span className="text-white font-bold text-xl tracking-tight">Kaira Technologies</span>
+              <span className="text-white font-black text-2xl tracking-tight uppercase">KairavCard</span>
             </div>
-            <Link to="/" className="text-white/70 hover:text-white text-sm transition-colors">← Home</Link>
+            <Link to="/" className="text-white/80 hover:text-white text-sm font-bold transition-colors">← HOME</Link>
           </div>
         </div>
 
-        <div className="relative z-10 space-y-6">
+        <div className="relative z-10 space-y-8">
           <div>
-            <h2 className="text-4xl font-bold text-white leading-tight">Your digital identity,<br />always in your pocket.</h2>
-            <p className="text-white/70 mt-3 text-base leading-relaxed">Create a stunning digital business card and share it instantly with anyone, anywhere.</p>
+            <h2 className="text-5xl font-black text-white leading-[1.1] uppercase">Your digital<br />identity.</h2>
+            <p className="text-white/80 mt-4 text-lg font-bold">Create a stunning digital business card and share it instantly with anyone, anywhere.</p>
           </div>
 
           <div className="space-y-3">
@@ -111,16 +107,8 @@ export default function Login() {
 
           {/* Mobile logo */}
           <div className="flex items-center justify-between mb-8 lg:hidden">
-            <div className="flex items-center gap-2">
-              
-              <span className="font-bold text-gray-900 text-lg">Kaira Technologies</span>
-            </div>
-            <Link to="/" className="text-sm text-gray-500 hover:text-indigo-600 transition-colors">← Home</Link>
-          </div>
-
-          {/* Desktop back button */}
-          <div className="hidden lg:flex justify-end mb-6">
-            <Link to="/" className="text-sm text-gray-500 hover:text-indigo-600 transition-colors flex items-center gap-1">← Back to Home</Link>
+            <span className="font-black text-[#1a1a1a] text-2xl uppercase tracking-tighter">KairavCard</span>
+            <Link to="/" className="text-sm text-gray-500 hover:text-[#c14f3e] transition-colors">← Home</Link>
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">

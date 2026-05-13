@@ -26,7 +26,7 @@ export default function Navbar() {
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-sm group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
             <CreditCard size={14} className="sm:text-base text-white" />
           </div>
-          <span className="font-bold text-base sm:text-lg gradient-text group-hover:opacity-80 transition-opacity">SmartCard</span>
+          <span className="font-bold text-base sm:text-lg gradient-text group-hover:opacity-80 transition-opacity">KairavCard</span>
         </Link>
 
         {/* Desktop Navigation */}
