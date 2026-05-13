@@ -79,8 +79,8 @@ class _PooledConnection:
             else:
                 try:
                     self._conn.close()
-                except Exception:
-                    pass
+                except pymysql.Error as e:
+                    logger.warning("Error closing DB connection: %s", e)
 
 
 def get_db() -> _PooledConnection:

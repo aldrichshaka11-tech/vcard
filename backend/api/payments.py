@@ -106,34 +106,37 @@ def _verify_webhook_signature(raw_body: bytes, auth_header: str) -> bool:
 
 
 def _activate_plan(db, user_id: int, plan: str, payment_id: int):
-    """Activate plan, create subscription record, update user role."""
+    """Activate plan, create subscription record, update user role — all in one transaction."""
     plan_info = PLANS[plan]
     role = plan_info["role"]
     days = plan_info["days"]
 
-    with db.cursor() as cur:
-        cur.execute(
-            "UPDATE subscriptions SET status='cancelled', cancelled_at=NOW() "
-            "WHERE user_id=%s AND status='active'",
-            (user_id,)
-        )
-    with db.cursor() as cur:
-        cur.execute(
-            "INSERT INTO subscriptions (user_id, plan, status, payment_id, start_date, end_date) "
-            "VALUES (%s, %s, 'active', %s, NOW(), DATE_ADD(NOW(), INTERVAL %s DAY))",
-            (user_id, plan, payment_id, days)
-        )
-        sub_id = cur.lastrowid
-
-    with db.cursor() as cur:
-        cur.execute("UPDATE payments SET subscription_id=%s WHERE id=%s", (sub_id, payment_id))
-
-    with db.cursor() as cur:
-        cur.execute(
-            "UPDATE users SET role=%s, plan_status='active', "
-            "plan_expires_at=DATE_ADD(NOW(), INTERVAL %s DAY) WHERE id=%s",
-            (role, days, user_id)
-        )
+    db.autocommit(False)
+    try:
+        with db.cursor() as cur:
+            cur.execute(
+                "UPDATE subscriptions SET status='cancelled', cancelled_at=NOW() "
+                "WHERE user_id=%s AND status='active'",
+                (user_id,)
+            )
+            cur.execute(
+                "INSERT INTO subscriptions (user_id, plan, status, payment_id, start_date, end_date) "
+                "VALUES (%s, %s, 'active', %s, NOW(), DATE_ADD(NOW(), INTERVAL %s DAY))",
+                (user_id, plan, payment_id, days)
+            )
+            sub_id = cur.lastrowid
+            cur.execute("UPDATE payments SET subscription_id=%s WHERE id=%s", (sub_id, payment_id))
+            cur.execute(
+                "UPDATE users SET role=%s, plan_status='active', "
+                "plan_expires_at=DATE_ADD(NOW(), INTERVAL %s DAY) WHERE id=%s",
+                (role, days, user_id)
+            )
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.autocommit(True)
 
     try:
         create_notification(
@@ -372,7 +375,7 @@ def payment_status(identity):
     try:
         with db.cursor() as cur:
             cur.execute(
-                "SELECT status, plan, amount, discount_amount, created_at FROM payments "
+                "SELECT id, user_id, status, plan, amount, discount_amount, created_at FROM payments "
                 "WHERE phonepe_order_id=%s AND user_id=%s",
                 (order_id, user_id),
             )
@@ -383,12 +386,9 @@ def payment_status(identity):
         # If PhonePe says COMPLETED but our DB still shows pending — activate now
         if live_state == "COMPLETED" and payment["status"] == "pending":
             with db.cursor() as cur:
-                cur.execute("SELECT * FROM payments WHERE phonepe_order_id=%s", (order_id,))
-                full_payment = cur.fetchone()
-            if full_payment:
-                with db.cursor() as cur:
-                    cur.execute("UPDATE payments SET status='success' WHERE phonepe_order_id=%s", (order_id,))
-                _activate_plan(db, full_payment["user_id"], full_payment["plan"], full_payment["id"])
+                cur.execute("UPDATE payments SET status='success' WHERE phonepe_order_id=%s AND status='pending'", (order_id,))
+            if cur.rowcount > 0:
+                _activate_plan(db, payment["user_id"], payment["plan"], payment["id"])
                 payment["status"] = "success"
 
         return json_resp(200, {"payment": payment})
