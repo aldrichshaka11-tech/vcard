@@ -246,7 +246,7 @@ def initiate_payment(identity):
             json=payload,
             headers={
                 "Content-Type":     "application/json",
-                "Authorization":    f"O {token}",
+                "Authorization":    f"O-Bearer {token}",
                 "X-Client-Id":      cfg["id"],
                 "X-Client-Version": str(cfg["version"]),
             },
@@ -359,7 +359,7 @@ def payment_status(identity):
         resp = requests.get(
             f"{_pg_base()}/checkout/v2/order/{order_id}/status",
             headers={
-                "Authorization":    f"O {token}",
+                "Authorization":    f"O-Bearer {token}",
                 "X-Client-Id":      cfg["id"],
                 "X-Client-Version": str(cfg["version"]),
             },
