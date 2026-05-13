@@ -63,11 +63,12 @@ export default function PaymentSuccess() {
               <CheckCircle size={64} className="text-green-500 mx-auto" />
               <h2 className="text-2xl font-bold text-gray-900">Payment Successful!</h2>
               <p className="text-gray-500">
-                Your <span className="font-semibold capitalize text-indigo-600">{plan}</span> plan is now active.
+                Your <span className="font-semibold capitalize text-[#c14f3e]">{plan}</span> plan is now active.
               </p>
+              <p className="text-sm text-gray-400">You can now create and edit your digital business card.</p>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold rounded-2xl hover:from-indigo-700 hover:to-violet-700 transition-all"
+                className="w-full py-3 bg-[#c14f3e] hover:bg-[#a63d2f] text-white font-bold rounded-2xl transition-all"
               >
                 Go to Dashboard →
               </button>

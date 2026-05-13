@@ -29,9 +29,7 @@ export default function Dashboard() {
     if (authLoading) return
     if (!user) return
     if (isAdmin()) return
-    if (user.plan_status !== 'active') {
-      navigate('/pricing', { replace: true })
-    }
+    // Don't redirect — show upgrade banner instead
   }, [user, authLoading])
 
   useEffect(() => {
@@ -95,7 +93,10 @@ export default function Dashboard() {
     }
   }
 
+  const hasPlan = isAdmin() || user?.plan_status === 'active'
+
   const createNewCard = async () => {
+    if (!hasPlan) { navigate('/pricing'); return }
     setCreating(true)
     try {
       const res = await api.post('/cards', { title: `Business Card ${cards.length + 1}`, company: '', bio: '', photo: '', theme: 'default' })
@@ -157,19 +158,48 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Hey, <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">{user?.name?.split(' ')[0] || 'there'}</span> 👋
+              Hey, <span className="text-[#c14f3e]">{user?.name?.split(' ')[0] || 'there'}</span> 👋
             </h1>
-            <p className="text-sm text-gray-500 mt-1">Here's what's happening with your cards</p>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-sm text-gray-500">Welcome back</p>
+              {user?.plan_status === 'active' ? (
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                  user?.role === 'advanced' ? 'bg-violet-100 text-violet-700' :
+                  user?.role === 'pro' ? 'bg-blue-100 text-blue-700' :
+                  'bg-gray-100 text-gray-600'
+                }`}>
+                  {user?.role?.toUpperCase()} PLAN
+                </span>
+              ) : (
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">NO ACTIVE PLAN</span>
+              )}
+            </div>
           </div>
           <button
             onClick={createNewCard}
             disabled={creating}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#c14f3e] hover:bg-[#a63d2f] disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
           >
             {creating ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Plus size={16} />}
             New Card
           </button>
         </div>
+
+        {/* Upgrade banner for users without active plan */}
+        {!hasPlan && (
+          <div className="bg-gradient-to-r from-[#c14f3e] to-[#4b98b4] rounded-2xl p-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-bold mb-1">Activate Your Plan to Get Started</h3>
+              <p className="text-white/80 text-sm">Choose a plan to create and share your digital business card.</p>
+            </div>
+            <button
+              onClick={() => navigate('/pricing')}
+              className="flex-shrink-0 px-6 py-3 bg-white text-[#c14f3e] font-bold rounded-xl hover:bg-gray-100 transition-all shadow-md"
+            >
+              View Plans →
+            </button>
+          </div>
+        )}
 
         {!selectedCard ? (
           /* Empty state */
@@ -316,7 +346,7 @@ export default function Dashboard() {
                       <p className="text-sm font-semibold text-gray-800">Live Preview</p>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Link to={`/editor?cardId=${selectedCard.id}`} className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 rounded-lg transition-all">
+                      <Link to={hasPlan ? `/editor?cardId=${selectedCard.id}` : '/pricing'} className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 rounded-lg transition-all">
                         <Pencil size={11} /> Edit
                       </Link>
                       <button onClick={handleDeleteCard} disabled={deleting} className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-50 border border-transparent hover:border-red-200 rounded-lg transition-all">
@@ -332,7 +362,7 @@ export default function Dashboard() {
             {/* Quick actions */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { label: 'Edit Card', icon: <Pencil size={16} />, href: `/editor?cardId=${selectedCard.id}`, primary: true, hover: 'hover:bg-indigo-700' },
+                { label: 'Edit Card', icon: <Pencil size={16} />, href: hasPlan ? `/editor?cardId=${selectedCard.id}` : '/pricing', primary: true, hover: 'hover:bg-indigo-700' },
                 { label: 'View Card', icon: <Eye size={16} />, href: publicUrl, external: true, hover: 'hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700' },
                 { label: 'Share QR', icon: <QrCode size={16} />, onClick: () => setShowQR(true), hover: 'hover:bg-violet-50 hover:border-violet-200 hover:text-violet-700' },
                 { label: 'Copy Link', icon: copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />, onClick: copyLink, hover: 'hover:bg-green-50 hover:border-green-200 hover:text-green-700' },

@@ -22,8 +22,12 @@ const Spinner = () => (
 )
 
 function GuestRoute({ children }) {
+  const { user, loading } = useAuth()
   const token = localStorage.getItem('token')
+
   if (!token) return children
+
+  // Check JWT expiry
   try {
     const payload = JSON.parse(atob(token.split('.')[1]))
     if (payload.exp && payload.exp * 1000 < Date.now()) {
@@ -32,8 +36,21 @@ function GuestRoute({ children }) {
       return children
     }
   } catch {}
-  const user = JSON.parse(localStorage.getItem('user') || '{}')
-  return <Navigate to={user?.role === 'admin' ? '/admin' : '/dashboard'} replace />
+
+  if (loading) return <Spinner />
+  if (!user) return children
+  return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
+}
+
+function PlanRoute({ children }) {
+  const { loading, user, isAdmin } = useAuth()
+  const token = localStorage.getItem('token')
+
+  if (!token) return <Navigate to="/login" replace />
+  if (loading) return <Spinner />
+  if (isAdmin()) return children
+  if (user?.plan_status !== 'active') return <Navigate to="/pricing" replace />
+  return children
 }
 
 function PrivateRoute({ children }) {
@@ -88,7 +105,7 @@ export default function App() {
           <Route path="/login"     element={<GuestRoute><Login /></GuestRoute>} />
           <Route path="/register"  element={<GuestRoute><Register /></GuestRoute>} />
           <Route path="/dashboard" element={<UserRoute><Dashboard /></UserRoute>} />
-          <Route path="/editor"    element={<UserRoute><ProfileEditor /></UserRoute>} />
+          <Route path="/editor"    element={<PlanRoute><ProfileEditor /></PlanRoute>} />
           <Route path="/upgrade"   element={<Navigate to="/pricing" replace />} />
           <Route path="/pricing"   element={<UserRoute><Pricing /></UserRoute>} />
           <Route path="/payment/success" element={<UserRoute><PaymentSuccess /></UserRoute>} />

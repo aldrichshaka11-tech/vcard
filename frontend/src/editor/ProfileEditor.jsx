@@ -57,16 +57,6 @@ export default function ProfileEditor() {
   const [serverCardId, setServerCardId] = useState(null)
   const { getFeatureLimit, canAccessFeature, user, loading: authLoading, isAdmin } = useAuth()
   const navigate = useNavigate()
-
-  // Plan gate — redirect to pricing if no active plan
-  useEffect(() => {
-    if (authLoading) return
-    if (!user) return
-    if (isAdmin()) return
-    if (user.plan_status !== 'active') {
-      navigate('/pricing', { replace: true })
-    }
-  }, [user, authLoading])
   
   const maxSocialLinks = getFeatureLimit(FEATURES.SOCIAL_LINKS)
   const socialFields = ['twitter', 'instagram', 'threads', 'linkedin', 'facebook', 'youtube', 'snapchat', 'tiktok', 'twitch', 'yelp']
