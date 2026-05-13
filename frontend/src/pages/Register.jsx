@@ -26,7 +26,7 @@ export default function Register() {
       localStorage.removeItem('smartcard_editor')
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
-      navigate('/dashboard')
+      navigate(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
     } catch (err) {
       setError('root', { message: err.response?.data?.error || 'Registration failed.' })
     }
@@ -45,127 +45,129 @@ export default function Register() {
         localStorage.setItem('user', JSON.stringify(res.data.user))
         navigate(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
       } catch (err) {
-        setError('root', { message: err.response?.data?.error || 'Google login failed.' })
+        setError('root', { message: err.response?.data?.error || 'Google signup failed.' })
       } finally {
         setGoogleLoading(false)
       }
     },
-    onError: () => setError('root', { message: 'Google login was cancelled.' })
+    onError: () => setError('root', { message: 'Google signup was cancelled.' })
   })
 
   return (
-    <div className="min-h-screen flex bg-white">
+    <div className="min-h-screen flex">
 
       {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#c14f3e] flex-col justify-between p-12 relative">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 flex-col justify-between p-12 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+
         <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src="/favicon.png" alt="Kaira" className="w-10 h-10 object-contain" />
-              <span className="text-white font-black text-2xl tracking-tight uppercase">Kaira</span>
-            </div>
-            <Link to="/" className="text-white/80 hover:text-white text-sm font-bold transition-colors">← HOME</Link>
+          <div className="flex items-center gap-3">
+            <img src="/favicon.png" alt="Kaira" className="w-10 h-10 object-contain" />
+            <span className="text-white font-bold text-xl tracking-tight">Kaira Technologies</span>
           </div>
         </div>
 
-        <div className="relative z-10 space-y-8">
+        <div className="relative z-10 space-y-6">
           <div>
-            <h2 className="text-5xl font-black text-white leading-[1.1] uppercase">Start your<br />digital journey.</h2>
-            <p className="text-white/80 mt-4 text-lg font-bold">Join thousands of professionals who share their identity the smart way.</p>
+            <h2 className="text-4xl font-bold text-white leading-tight">Start networking<br />smarter today.</h2>
+            <p className="text-white/70 mt-3 text-base leading-relaxed">Join thousands of professionals who've replaced paper cards with a smarter digital presence.</p>
           </div>
 
-          <div className="space-y-4">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20 space-y-4">
+            <p className="text-white/60 text-xs font-semibold uppercase tracking-widest">What you get for free</p>
             {[
-              { icon: '🚀', text: 'Get your digital card live in minutes' },
-              { icon: '📱', text: 'Share via QR code, link, or NFC' },
-              { icon: '📈', text: 'Track who views your card in real time' },
+              { icon: '✅', text: '1 digital business card' },
+              { icon: '✅', text: 'Custom shareable link & QR code' },
+              { icon: '✅', text: 'Real-time view analytics' },
+              { icon: '✅', text: 'Save contact (VCF) download' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-lg flex-shrink-0">{item.icon}</div>
-                <span className="text-white/90 font-bold">{item.text}</span>
+              <div key={i} className="flex items-center gap-2.5">
+                <span className="text-sm">{item.icon}</span>
+                <span className="text-white/85 text-sm">{item.text}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="relative z-10">
-          <div className="flex items-center gap-4">
-            <div className="flex -space-x-2">
-              {['JD','AS','RK','ML'].map((initial, i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-4 border-[#c14f3e] bg-white/20 flex items-center justify-center text-white text-[10px] font-black">
-                  {initial}
-                </div>
-              ))}
-            </div>
-            <p className="text-white/80 text-sm font-bold">Trusted by <span className="text-white">10,000+</span> professionals</p>
-          </div>
+          <p className="text-white/50 text-xs">No credit card required · Free forever</p>
         </div>
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-[#f8fafc]">
+      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
         <div className="w-full max-w-md">
 
           {/* Mobile logo */}
-          <div className="flex items-center justify-between mb-10 lg:hidden">
-            <span className="font-black text-[#1a1a1a] text-2xl uppercase tracking-tighter">Kaira</span>
-            <Link to="/" className="text-sm font-black text-gray-400 hover:text-[#c14f3e] transition-colors">← HOME</Link>
+          <div className="flex items-center justify-between mb-8 lg:hidden">
+            <div className="flex items-center gap-2">
+   
+              <span className="font-bold text-gray-900 text-lg">Kaira Technologies</span>
+            </div>
+            <Link to="/" className="text-sm text-gray-500 hover:text-violet-600 transition-colors">← Home</Link>
           </div>
 
-          <div className="bg-white rounded-[32px] border-2 border-[#f1f5f9] p-10 shadow-sm">
-            <div className="mb-8">
-              <h1 className="text-3xl font-black text-[#1a1a1a] uppercase tracking-tight">Create Account</h1>
-              <p className="text-gray-400 font-bold text-sm mt-1">Start your digital card journey today</p>
+          {/* Desktop back button */}
+          <div className="hidden lg:flex justify-end mb-6">
+            <Link to="/" className="text-sm text-gray-500 hover:text-violet-600 transition-colors">← Back to Home</Link>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div className="mb-7">
+              <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
+              <p className="text-gray-500 text-sm mt-1">Get started — it's free, no credit card needed</p>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2">Full Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Full name</label>
                 <div className="relative">
-                  <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Your full name"
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-[#f1f5f9] rounded-2xl text-sm font-black text-[#1a1a1a] placeholder-gray-300 focus:outline-none focus:border-[#c14f3e] transition-all"
+                    placeholder="John Doe"
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
                     {...register('name', { required: 'Name is required.' })}
                   />
                 </div>
-                {errors.name && <p className="text-red-500 font-bold text-xs mt-1.5">{errors.name.message}</p>}
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2">Email address</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
                 <div className="relative">
-                  <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-[#f1f5f9] rounded-2xl text-sm font-black text-[#1a1a1a] placeholder-gray-300 focus:outline-none focus:border-[#c14f3e] transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
                     {...register('email', { required: 'Email is required.' })}
                   />
                 </div>
-                {errors.email && <p className="text-red-500 font-bold text-xs mt-1.5">{errors.email.message}</p>}
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2">Password</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
                 <div className="relative">
-                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Min. 6 characters"
-                    className="w-full pl-12 pr-12 py-3.5 border-2 border-[#f1f5f9] rounded-2xl text-sm font-black text-[#1a1a1a] placeholder-gray-300 focus:outline-none focus:border-[#c14f3e] transition-all"
+                    className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
                     {...register('password', { required: 'Password is required.', minLength: { value: 6, message: 'Min. 6 characters.' } })}
                   />
-                  <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#c14f3e] transition-colors">
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
-                {errors.password && <p className="text-red-500 font-bold text-xs mt-1.5">{errors.password.message}</p>}
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
               </div>
 
               {errors.root && (
-                <div className="flex items-center gap-3 p-4 bg-red-50 border-2 border-red-100 rounded-2xl text-red-600 text-xs font-bold">
+                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
                   <span>⚠</span> {errors.root.message}
                 </div>
               )}
@@ -173,38 +175,38 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-[#c14f3e] hover:bg-[#a63d2f] disabled:opacity-60 text-white font-black text-sm rounded-2xl transition-all shadow-lg shadow-red-100 uppercase tracking-widest active:scale-95"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition"
               >
                 {isSubmitting ? (
-                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> ...</>
+                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Creating account...</>
                 ) : (
-                  <>Create Account <ArrowRight size={18} /></>
+                  <>Create Free Account <ArrowRight size={15} /></>
                 )}
               </button>
             </form>
 
-            <div className="flex items-center gap-4 my-8">
-              <div className="flex-1 h-[2px] bg-[#f1f5f9]" />
-              <span className="text-[10px] text-gray-300 font-black tracking-widest">OR</span>
-              <div className="flex-1 h-[2px] bg-[#f1f5f9]" />
+            <div className="flex items-center gap-3 my-5">
+              <div className="flex-1 h-px bg-gray-100" />
+              <span className="text-xs text-gray-400 font-medium">OR</span>
+              <div className="flex-1 h-px bg-gray-100" />
             </div>
 
             <button
               type="button"
               onClick={() => googleLogin()}
               disabled={googleLoading}
-              className="w-full flex items-center justify-center gap-3 py-3.5 px-6 bg-white border-2 border-[#f1f5f9] hover:border-gray-200 text-[#1a1a1a] font-black text-sm rounded-2xl transition-all active:scale-95"
+              className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-gray-700 font-medium text-sm rounded-xl transition"
             >
               {googleLoading
-                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-[#c14f3e] rounded-full animate-spin" />
+                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-violet-500 rounded-full animate-spin" />
                 : GOOGLE_SVG
               }
-              Sign up with Google
+              Continue with Google
             </button>
 
-            <p className="text-center text-xs font-bold text-gray-400 mt-8">
+            <p className="text-center text-sm text-gray-500 mt-6">
               Already have an account?{' '}
-              <Link to="/login" className="text-[#c14f3e] font-black hover:underline uppercase tracking-wide ml-1">Sign In</Link>
+              <Link to="/login" className="text-violet-600 font-semibold hover:text-violet-700">Sign in</Link>
             </p>
           </div>
         </div>
