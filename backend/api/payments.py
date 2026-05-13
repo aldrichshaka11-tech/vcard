@@ -236,13 +236,9 @@ def initiate_payment(identity):
         "currency":        "INR",
         "redirectUrl":     f"{cfg['redirect']}?order_id={order_id}",
         "paymentFlow": {
-            "type":           "PG_CHECKOUT",
-            "message":        f"SmartCard {plan_info['label']}",
-            "merchantUserId": f"USER_{user_id}",
+            "type": "PG_CHECKOUT",
         },
     }
-    if cfg["callback"]:
-        payload["callbackUrl"] = cfg["callback"]
 
     try:
         resp = requests.post(
@@ -250,7 +246,7 @@ def initiate_payment(identity):
             json=payload,
             headers={
                 "Content-Type":     "application/json",
-                "Authorization":    f"Bearer {token}",
+                "Authorization":    f"O {token}",
                 "X-Client-Id":      cfg["id"],
                 "X-Client-Version": str(cfg["version"]),
             },
@@ -258,6 +254,7 @@ def initiate_payment(identity):
         )
         data = resp.json()
         logger.info("PhonePe initiate response status=%s body=%s", resp.status_code, data)
+        logger.info("PhonePe payload sent=%s", payload)
 
         redirect_url = (
             data.get("redirectUrl")
@@ -362,7 +359,7 @@ def payment_status(identity):
         resp = requests.get(
             f"{_pg_base()}/checkout/v2/order/{order_id}/status",
             headers={
-                "Authorization":    f"Bearer {token}",
+                "Authorization":    f"O {token}",
                 "X-Client-Id":      cfg["id"],
                 "X-Client-Version": str(cfg["version"]),
             },
