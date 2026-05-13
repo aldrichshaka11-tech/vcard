@@ -817,7 +817,7 @@ export default function Home() {
                 ))}
               </ul>
               
-              <button className="pricing-cta">Upgrade to {plan.name}</button>
+              <Link to="/register" className="pricing-cta" style={{display:'block', textAlign:'center', textDecoration:'none'}}>Upgrade to {plan.name}</Link>
             </div>
           ))}
         </div>
@@ -865,9 +865,9 @@ export default function Home() {
             We handle the digital infrastructure so you can focus on building relationships. 
             Trusted digital vcard solution serving professionals worldwide.
           </p>
-          <button className="final-cta-btn">
+          <Link to="/register" className="final-cta-btn">
             CREATE YOUR FREE CARD <span>→</span>
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -876,26 +876,24 @@ export default function Home() {
           <div className="footer-col">
             <h5 className="footer-col-title">Product</h5>
             <ul className="footer-links">
-              <li><Link to="/">Features</Link></li>
-              <li><Link to="/">Templates</Link></li>
-              <li><Link to="/">Pricing</Link></li>
-              <li><Link to="/">Analytics</Link></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#how">How it works</a></li>
+              <li><a href="#faq">FAQ</a></li>
             </ul>
           </div>
           <div className="footer-col">
-            <h5 className="footer-col-title">Solutions</h5>
+            <h5 className="footer-col-title">Get Started</h5>
             <ul className="footer-links">
-              <li><Link to="/">For Individuals</Link></li>
-              <li><Link to="/">For Teams</Link></li>
-              <li><Link to="/">For Enterprise</Link></li>
+              <li><Link to="/register">Create Account</Link></li>
+              <li><Link to="/login">Login</Link></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5 className="footer-col-title">Company</h5>
             <ul className="footer-links">
-              <li><Link to="/">About Us</Link></li>
-              <li><Link to="/">Blog</Link></li>
-              <li><Link to="/">Contact</Link></li>
+              <li><a href="#features">About Us</a></li>
+              <li><a href="https://wa.me/916379430293" target="_blank" rel="noreferrer">Contact</a></li>
             </ul>
           </div>
           <div className="footer-col">
