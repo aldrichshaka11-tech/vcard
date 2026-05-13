@@ -117,13 +117,11 @@ export default function Pricing() {
   const getButtonLabel = (plan) => {
     if (authLoading) return 'Loading...'
     if (isAdmin()) return 'Admin — Full Access'
-    if (plan.id === currentPlan) return 'Current Plan'
+    if (plan.id === currentPlan && user?.plan_status === 'active') return 'Renew Plan'
     return `Upgrade to ${plan.name}`
   }
 
-  const isCurrentPlan = (plan) => {
-    return plan.id === currentPlan
-  }
+  const isCurrentPlan = (plan) => false // always allow payment
 
   const getDisplayPrice = (plan) => {
     if (couponResult?.valid && couponPlan === plan.id && !couponResult.error) {
@@ -244,17 +242,15 @@ export default function Pricing() {
                 {/* CTA */}
                 <button
                   onClick={() => handlePay(plan.id)}
-                  disabled={isCurrentPlan(plan) || paying === plan.id || isAdmin() || authLoading}
+                  disabled={paying === plan.id || isAdmin() || authLoading}
                   className={`w-full py-3 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-                    isCurrentPlan(plan) || isAdmin()
+                    isAdmin()
                       ? 'bg-gray-100 text-gray-400 cursor-default'
                       : plan.popular
                         ? 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5'
                         : plan.id === 'basic'
                           ? 'bg-gray-800 hover:bg-gray-900 text-white hover:-translate-y-0.5'
-                          : plan.id === 'advanced'
-                          ? 'bg-violet-600 hover:bg-violet-700 text-white hover:-translate-y-0.5'
-                          : 'bg-gray-100 text-gray-400 cursor-default'
+                          : 'bg-violet-600 hover:bg-violet-700 text-white hover:-translate-y-0.5'
                   }`}>
                   {paying === plan.id
                     ? <><Loader size={15} className="animate-spin" /> Redirecting...</>

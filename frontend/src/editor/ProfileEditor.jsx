@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { User, Globe, AtSign, MessageCircle, Briefcase, Share2, RotateCcw, Eye, Save, Sparkles, Target, Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import html2canvas from 'html2canvas'
 import { useCardStore } from './useCardStore'
@@ -54,7 +55,18 @@ export default function ProfileEditor() {
   const [activeStep, setActiveStep] = useState(0)
   const [saving, setSaving] = useState(false)
   const [serverCardId, setServerCardId] = useState(null)
-  const { getFeatureLimit, canAccessFeature } = useAuth()
+  const { getFeatureLimit, canAccessFeature, user, loading: authLoading, isAdmin } = useAuth()
+  const navigate = useNavigate()
+
+  // Plan gate — redirect to pricing if no active plan
+  useEffect(() => {
+    if (authLoading) return
+    if (!user) return
+    if (isAdmin()) return
+    if (user.plan_status !== 'active') {
+      navigate('/pricing', { replace: true })
+    }
+  }, [user, authLoading])
   
   const maxSocialLinks = getFeatureLimit(FEATURES.SOCIAL_LINKS)
   const socialFields = ['twitter', 'instagram', 'threads', 'linkedin', 'facebook', 'youtube', 'snapchat', 'tiktok', 'twitch', 'yelp']

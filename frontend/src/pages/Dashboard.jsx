@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, QrCode, Pencil, TrendingUp, ExternalLink, Sparkles, Trash2, Share2, Copy, Check, Users, BarChart2, Plus, ArrowUpRight, Mail, Phone, MessageSquare, X } from 'lucide-react'
 import api from '../api/axios'
 import Navbar from '../components/Navbar'
@@ -8,7 +8,8 @@ import QRModal from '../components/QRModal'
 import { useAuth } from '../api/useAuth'
 
 export default function Dashboard() {
-  const { user } = useAuth()
+  const { user, isAdmin, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
   const [cards, setCards] = useState([])
   const [selectedCard, setSelectedCard] = useState(null)
   const [analytics, setAnalytics] = useState(null)
@@ -23,6 +24,15 @@ export default function Dashboard() {
 
   const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL || window.location.origin
   const publicUrl = selectedCard ? `${PUBLIC_BASE}/card/id/${selectedCard.id}` : ''
+
+  useEffect(() => {
+    if (authLoading) return
+    if (!user) return
+    if (isAdmin()) return
+    if (user.plan_status !== 'active') {
+      navigate('/pricing', { replace: true })
+    }
+  }, [user, authLoading])
 
   useEffect(() => {
     const fetchData = async () => {
