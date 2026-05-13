@@ -235,9 +235,7 @@ def initiate_payment(identity):
         "amount":          amount,
         "currency":        "INR",
         "redirectUrl":     f"{cfg['redirect']}?order_id={order_id}",
-        "paymentFlow": {
-            "type": "PG_CHECKOUT",
-        },
+        "paymentFlow":     {"type": "PG_CHECKOUT"},
     }
 
     try:
