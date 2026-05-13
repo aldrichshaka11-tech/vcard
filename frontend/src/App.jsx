@@ -22,7 +22,7 @@ const Spinner = () => (
 )
 
 function PrivateRoute({ children }) {
-  const { loading } = useAuth()
+  const { loading, user } = useAuth()
   const token = localStorage.getItem('token')
 
   if (!token) return <Navigate to="/login" replace />
@@ -37,8 +37,29 @@ function PrivateRoute({ children }) {
     }
   } catch {}
 
-  // Wait for /auth/me to complete before rendering protected page
   if (loading) return <Spinner />
+
+  return children
+}
+
+function AdminRoute({ children }) {
+  const { loading, user } = useAuth()
+  const token = localStorage.getItem('token')
+
+  if (!token) return <Navigate to="/login" replace />
+  if (loading) return <Spinner />
+  if (user?.role !== 'admin') return <Navigate to="/dashboard" replace />
+
+  return children
+}
+
+function UserRoute({ children }) {
+  const { loading, user } = useAuth()
+  const token = localStorage.getItem('token')
+
+  if (!token) return <Navigate to="/login" replace />
+  if (loading) return <Spinner />
+  if (user?.role === 'admin') return <Navigate to="/admin" replace />
 
   return children
 }
@@ -50,14 +71,14 @@ export default function App() {
         <Routes>
           <Route path="/login"     element={<Login />} />
           <Route path="/register"  element={<Register />} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-          <Route path="/editor"    element={<PrivateRoute><ProfileEditor /></PrivateRoute>} />
+          <Route path="/dashboard" element={<UserRoute><Dashboard /></UserRoute>} />
+          <Route path="/editor"    element={<UserRoute><ProfileEditor /></UserRoute>} />
           <Route path="/upgrade"   element={<Navigate to="/pricing" replace />} />
-          <Route path="/pricing"   element={<PrivateRoute><Pricing /></PrivateRoute>} />
-          <Route path="/payment/success" element={<PrivateRoute><PaymentSuccess /></PrivateRoute>} />
-          <Route path="/admin"     element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
-          <Route path="/admin/users" element={<PrivateRoute><AdminUsers /></PrivateRoute>} />
-          <Route path="/admin/requests" element={<PrivateRoute><AdminRequests /></PrivateRoute>} />
+          <Route path="/pricing"   element={<UserRoute><Pricing /></UserRoute>} />
+          <Route path="/payment/success" element={<UserRoute><PaymentSuccess /></UserRoute>} />
+          <Route path="/admin"     element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+          <Route path="/admin/requests" element={<AdminRoute><AdminRequests /></AdminRoute>} />
           <Route path="/card/id/:cardId" element={<EditorPublicCard />} />
           <Route path="/card/:slug" element={<EditorPublicCard />} />
           <Route path="/"          element={<Home />} />
