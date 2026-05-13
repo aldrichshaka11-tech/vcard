@@ -141,7 +141,7 @@ def _activate_plan(db, user_id: int, plan: str, payment_id: int):
             f"Your {plan.capitalize()} plan is now active for {days} days.",
         )
     except Exception:
-        pass
+        logger.exception("create_notification failed user_id=%s", user_id)
 
     logger.info("Plan activated user_id=%s plan=%s sub_id=%s", user_id, plan, sub_id)
 
@@ -356,7 +356,7 @@ def payment_status(identity):
     try:
         cfg = _cfg()
         token = _get_access_token()
-        resp = requests.get(
+        with requests.get(
             f"{_pg_base()}/checkout/v2/order/{order_id}/status",
             headers={
                 "Authorization":    f"O-Bearer {token}",
@@ -364,11 +364,11 @@ def payment_status(identity):
                 "X-Client-Version": str(cfg["version"]),
             },
             timeout=10,
-        )
-        if resp.status_code == 200:
-            live_state = resp.json().get("state")
+        ) as resp:
+            if resp.status_code == 200:
+                live_state = resp.json().get("state")
     except Exception:
-        pass
+        logger.exception("PhonePe status poll failed order=%s", order_id)
 
     db = get_db()
     try:
@@ -516,7 +516,7 @@ def expire_plans():
                 create_notification(uid, "plan_expired", "Plan Expired",
                     "Your subscription has expired. Upgrade to continue using premium features.")
             except Exception:
-                pass
+                logger.exception("create_notification failed uid=%s", uid)
             count += 1
         logger.info("expire_plans: downgraded %d users", count)
         return json_resp(200, {"expired": count})
@@ -627,7 +627,7 @@ def admin_override(identity):
             create_notification(user_id, "admin_plan_change", "Plan Updated",
                 f"Your plan has been updated by admin. {note}")
         except Exception:
-            pass
+            logger.exception("create_notification failed user_id=%s", user_id)
 
         logger.info("admin_override admin=%s user=%s action=%s plan=%s", admin_id, user_id, action, plan)
         return json_resp(200, {"message": "Plan updated successfully."})

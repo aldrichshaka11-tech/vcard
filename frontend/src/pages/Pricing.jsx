@@ -114,10 +114,15 @@ export default function Pricing() {
     }
   }
 
+  const PLAN_ORDER = { basic: 0, pro: 1, advanced: 2 }
+
   const getButtonLabel = (plan) => {
     if (authLoading) return 'Loading...'
+    if (!user) return 'Get Started'
     if (isAdmin()) return 'Admin — Full Access'
     if (plan.id === currentPlan && user?.plan_status === 'active') return 'Renew Plan'
+    if (plan.id === currentPlan) return 'Activate Plan'
+    if (PLAN_ORDER[plan.id] < PLAN_ORDER[currentPlan]) return `Switch to ${plan.name}`
     return `Upgrade to ${plan.name}`
   }
 

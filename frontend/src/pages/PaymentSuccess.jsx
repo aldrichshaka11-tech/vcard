@@ -36,8 +36,8 @@ export default function PaymentSuccess() {
         } else if (attempts < 6) {
           setTimeout(() => check(attempts + 1), 2000)
         } else {
-          // After 12 seconds still pending — likely cancelled
-          setStatus('failed')
+          // After 12 seconds still pending — show pending state
+          setStatus('pending')
         }
       } catch {
         setStatus('failed')
@@ -89,12 +89,18 @@ export default function PaymentSuccess() {
           )}
           {status === 'pending' && (
             <div className="space-y-5">
-              <Loader size={64} className="text-yellow-500 mx-auto" />
-              <h2 className="text-2xl font-bold text-gray-900">Payment Pending</h2>
-              <p className="text-gray-500">Your payment is being processed. Please check back in a few minutes.</p>
+              <Loader size={64} className="animate-spin text-yellow-500 mx-auto" />
+              <h2 className="text-2xl font-bold text-gray-900">Payment is Taking Longer</h2>
+              <p className="text-gray-500">Your payment is still being processed. Please check your dashboard in a few minutes — do not pay again.</p>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="w-full py-3 bg-indigo-600 text-white font-bold rounded-2xl hover:bg-indigo-700 transition-all"
+              >
+                Go to Dashboard
+              </button>
               <button
                 onClick={() => navigate('/pricing')}
-                className="w-full py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all"
+                className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
               >
                 Back to Plans
               </button>

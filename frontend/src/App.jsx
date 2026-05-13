@@ -107,7 +107,7 @@ export default function App() {
           <Route path="/dashboard" element={<UserRoute><Dashboard /></UserRoute>} />
           <Route path="/editor"    element={<PlanRoute><ProfileEditor /></PlanRoute>} />
           <Route path="/upgrade"   element={<Navigate to="/pricing" replace />} />
-          <Route path="/pricing"   element={<UserRoute><Pricing /></UserRoute>} />
+          <Route path="/pricing"   element={<Pricing />} />
           <Route path="/payment/success" element={<UserRoute><PaymentSuccess /></UserRoute>} />
           <Route path="/admin"     element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
