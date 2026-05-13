@@ -12,7 +12,7 @@ from utils import json_error
 logger = logging.getLogger(__name__)
 qr_bp = Blueprint("qr", __name__)
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://vcardfrontendnew.vercel.app")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://kairavcard.com")
 
 
 def _make_qr(slug, target=None):

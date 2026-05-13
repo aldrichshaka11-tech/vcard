@@ -89,7 +89,7 @@ def download_vcf():
 
     if card.get("photo"):
         scheme   = "https" if request.is_secure else "http"
-        photo_url = f"{scheme}://{request.host}/smartcard/backend/uploads/{os.path.basename(card['photo'])}"
+        photo_url = f"{scheme}://{request.host}/uploads/{os.path.basename(card['photo'])}"
         lines.append(f"PHOTO;VALUE=URI:{photo_url}")
 
     lines.append("END:VCARD")

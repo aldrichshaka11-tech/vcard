@@ -278,10 +278,9 @@ def initiate_payment(identity):
 @payments_bp.route("/callback", methods=["POST"])
 def payment_callback():
     raw_body     = request.get_data()
-    auth_header  = request.headers.get("Authorization", "")
-
+    cfg = _cfg()
     # Verify webhook signature
-    if _CLIENT_SECRET and not _verify_webhook_signature(raw_body, auth_header):
+    if cfg["secret"] and not _verify_webhook_signature(raw_body, auth_header):
         logger.warning("PhonePe callback signature MISMATCH")
         return json_error(403, "Signature mismatch.")
 

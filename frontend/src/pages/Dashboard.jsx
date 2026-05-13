@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Eye, QrCode, Pencil, TrendingUp, ExternalLink, Sparkles, Trash2, Share2, Copy, Check, Users, BarChart2, Plus, ArrowUpRight } from 'lucide-react'
+import { Eye, QrCode, Pencil, TrendingUp, ExternalLink, Sparkles, Trash2, Share2, Copy, Check, Users, BarChart2, Plus, ArrowUpRight, Mail, Phone, MessageSquare, X } from 'lucide-react'
 import api from '../api/axios'
 import Navbar from '../components/Navbar'
 import CardPreview from '../components/CardPreview'
@@ -17,6 +17,9 @@ export default function Dashboard() {
   const [deleting, setDeleting] = useState(false)
   const [copied, setCopied] = useState(false)
   const [creating, setCreating] = useState(false)
+  const [leads, setLeads] = useState([])
+  const [leadsLoading, setLeadsLoading] = useState(false)
+  const [deletingLead, setDeletingLead] = useState(null)
 
   const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL || window.location.origin
   const publicUrl = selectedCard ? `${PUBLIC_BASE}/card/id/${selectedCard.id}` : ''
@@ -30,6 +33,7 @@ export default function Dashboard() {
         if (userCards.length > 0) {
           setSelectedCard(userCards[0])
           api.get(`/analytics?card_id=${userCards[0].id}`).then(r => setAnalytics(r.data)).catch(() => {})
+          fetchLeads(userCards[0].id)
         }
       } catch (err) {
         if (err.response?.status !== 404) console.error(err)
@@ -92,9 +96,27 @@ export default function Dashboard() {
     }
   }
 
+  const fetchLeads = (cardId) => {
+    setLeadsLoading(true)
+    api.get(`/leads?card_id=${cardId}`)
+      .then(r => setLeads(r.data.leads || []))
+      .catch(() => setLeads([]))
+      .finally(() => setLeadsLoading(false))
+  }
+
+  const deleteLead = async (leadId) => {
+    setDeletingLead(leadId)
+    try {
+      await api.delete(`/leads/${leadId}`)
+      setLeads(prev => prev.filter(l => l.id !== leadId))
+    } catch {}
+    finally { setDeletingLead(null) }
+  }
+
   const selectCard = (card) => {
     setSelectedCard(card)
     api.get(`/analytics?card_id=${card.id}`).then(r => setAnalytics(r.data)).catch(() => setAnalytics(null))
+    fetchLeads(card.id)
   }
 
   if (loading) return (
@@ -315,6 +337,76 @@ export default function Dashboard() {
                   {a.icon} {a.label}
                 </button>
               ))}
+            </div>
+
+            {/* Leads from visitors */}
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 bg-pink-50 rounded-xl flex items-center justify-center">
+                    <Users size={15} className="text-pink-500" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">Contacts Received</p>
+                    <p className="text-xs text-gray-400">{leads.length} {leads.length === 1 ? 'person' : 'people'} shared their details</p>
+                  </div>
+                </div>
+              </div>
+
+              {leadsLoading ? (
+                <div className="flex items-center justify-center py-10">
+                  <div className="w-6 h-6 border-2 border-pink-400 border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : leads.length === 0 ? (
+                <div className="text-center py-10 px-4">
+                  <p className="text-3xl mb-2">📭</p>
+                  <p className="text-sm font-medium text-gray-500">No contacts yet</p>
+                  <p className="text-xs text-gray-400 mt-1">When visitors submit their details on your public card, they'll appear here.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-gray-50">
+                  {leads.map(lead => (
+                    <div key={lead.id} className="flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors group">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center text-sm font-bold text-indigo-600 flex-shrink-0">
+                        {lead.lead_name?.[0]?.toUpperCase() || '?'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-800">{lead.lead_name}</p>
+                        <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
+                          {lead.lead_email && (
+                            <a href={`mailto:${lead.lead_email}`} className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors">
+                              <Mail size={11} /> {lead.lead_email}
+                            </a>
+                          )}
+                          {lead.lead_phone && (
+                            <a href={`tel:${lead.lead_phone}`} className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700 transition-colors">
+                              <Phone size={11} /> {lead.lead_phone}
+                            </a>
+                          )}
+                        </div>
+                        {lead.lead_note && (
+                          <p className="flex items-start gap-1 text-xs text-gray-400 mt-0.5">
+                            <MessageSquare size={10} className="mt-0.5 flex-shrink-0" /> {lead.lead_note}
+                          </p>
+                        )}
+                        <p className="text-[10px] text-gray-300 mt-0.5">
+                          {new Date(lead.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => deleteLead(lead.id)}
+                        disabled={deletingLead === lead.id}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-50 text-gray-300 hover:text-red-400 flex-shrink-0"
+                        title="Delete lead"
+                      >
+                        {deletingLead === lead.id
+                          ? <div className="w-3.5 h-3.5 border border-red-400 border-t-transparent rounded-full animate-spin" />
+                          : <X size={14} />}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </>
         )}

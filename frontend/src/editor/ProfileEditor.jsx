@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { User, Globe, AtSign, MessageCircle, Briefcase, Share2, RotateCcw, Eye, FileJson, Save, Sparkles, Target, Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { User, Globe, AtSign, MessageCircle, Briefcase, Share2, RotateCcw, Eye, Save, Sparkles, Target, Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import html2canvas from 'html2canvas'
 import { useCardStore } from './useCardStore'
 import CardPreview from './CardPreview'
@@ -533,6 +533,13 @@ export default function ProfileEditor() {
     Object.entries(preset.data).forEach(([k, v]) => update(k, v))
   }
 
+  const clearPreset = (preset) => {
+    Object.keys(preset.data).forEach(k => update(k, ''))
+  }
+
+  const isPresetApplied = (preset) =>
+    Object.entries(preset.data).every(([k, v]) => (card[k] || '') === v)
+
   const reset = () => {
     if (confirm('Reset all card data?')) localStorage.removeItem('smartcard_editor') || window.location.reload()
   }
@@ -575,11 +582,32 @@ export default function ProfileEditor() {
               <span className="hidden sm:inline">Reset</span>
             </button>
             <button
-              onClick={exportJSON}
-              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-600 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all"
+              onClick={shareLink}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-600 hover:bg-blue-50 hover:text-blue-600 border border-transparent hover:border-blue-200 transition-all"
             >
-              <FileJson size={12} className="sm:text-base" />
-              <span className="hidden sm:inline">Export</span>
+              <Share2 size={12} className="sm:text-base" />
+              <span className="hidden sm:inline">Copy Link</span>
+            </button>
+            <button
+              onClick={shareWhatsApp}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-600 hover:bg-green-50 hover:text-green-600 border border-transparent hover:border-green-200 transition-all"
+            >
+              <span className="hidden sm:inline">WhatsApp</span>
+              <span className="sm:hidden">WA</span>
+            </button>
+            <button
+              onClick={shareEmail}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 border border-transparent hover:border-indigo-200 transition-all"
+            >
+              <span className="hidden sm:inline">Email</span>
+              <span className="sm:hidden">✉</span>
+            </button>
+            <button
+              onClick={() => setShowQR(true)}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-600 hover:bg-violet-50 hover:text-violet-600 border border-transparent hover:border-violet-200 transition-all"
+            >
+              <span className="hidden sm:inline">QR PNG</span>
+              <span className="sm:hidden">QR</span>
             </button>
             <button
               onClick={saveToBackend}
@@ -624,18 +652,6 @@ export default function ProfileEditor() {
 
           {/* RIGHT — Editor */}
           <div className="flex-1 min-w-0 space-y-3 sm:space-y-4">
-            <div className="bg-white rounded-2xl border-2 border-blue-100 p-4 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 flex items-center gap-2">
-                <Share2 size={13} className="text-blue-400" /> Share Your Card
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button onClick={shareLink} className="btn-secondary text-xs py-2 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all"><Share2 size={12} /> Copy Link</button>
-                <button onClick={shareWhatsApp} className="btn-secondary text-xs py-2 hover:bg-green-50 hover:border-green-200 hover:text-green-600 transition-all">WhatsApp</button>
-                <button onClick={shareEmail} className="btn-secondary text-xs py-2 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-all">Email</button>
-                <button onClick={() => setShowQR(true)} className="btn-secondary text-xs py-2 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-600 transition-all">QR PNG</button>
-              </div>
-            </div>
-
             {/* Visual customization */}
             <VisualPanel card={card} update={update} updateNested={updateNested} />
 
@@ -703,11 +719,32 @@ export default function ProfileEditor() {
                       <div className="pt-1 border-t border-gray-100">
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1.5"><Sparkles size={12} className="text-amber-400" /> Quick Presets</p>
                         <div className="flex flex-wrap gap-2">
-                          {presets.map(p => (
-                            <button key={p.id} onClick={() => applyPreset(p)} className="btn-secondary text-xs py-1.5 hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700 transition-all">
-                              {p.label}
-                            </button>
-                          ))}
+                          {presets.map(p => {
+                            const applied = isPresetApplied(p)
+                            return (
+                              <div key={p.id} className="flex items-center">
+                                <button
+                                  onClick={() => applyPreset(p)}
+                                  className={`text-xs py-1.5 px-3 rounded-l-lg border font-medium transition-all ${
+                                    applied
+                                      ? 'bg-amber-50 border-amber-300 text-amber-700'
+                                      : 'bg-white border-gray-200 text-gray-600 hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700'
+                                  }`}
+                                >
+                                  {p.label}
+                                </button>
+                                {applied && (
+                                  <button
+                                    onClick={() => clearPreset(p)}
+                                    title="Remove preset"
+                                    className="text-xs py-1.5 px-2 rounded-r-lg border border-l-0 border-red-200 bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-all font-bold"
+                                  >
+                                    ×
+                                  </button>
+                                )}
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                     </>
