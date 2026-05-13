@@ -84,7 +84,16 @@ def add_cors_headers(response):
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
-        return make_response("", 200)
+        response = make_response("", 200)
+        origin = _cors_origin(request.headers.get("Origin"))
+        if origin:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Max-Age"] = "600"
+        response.headers["Vary"] = "Origin"
+        return response
 
 
 # ── Static uploads ────────────────────────────────────────────────────────────
