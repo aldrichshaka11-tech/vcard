@@ -26,7 +26,7 @@ payments_bp = Blueprint("payments", __name__)
 
 # ── Plan config ───────────────────────────────────────────────────────────────
 PLANS = {
-    "basic":    {"amount": 29900,  "label": "Basic Plan",    "role": "basic",    "days": 30},
+    "basic":    {"amount": 100,  "label": "Basic Plan",    "role": "basic",    "days": 30},
     "pro":      {"amount": 59900,  "label": "Pro Plan",      "role": "pro",      "days": 30},
     "advanced": {"amount": 99900,  "label": "Advanced Plan", "role": "advanced", "days": 30},
 }
@@ -65,6 +65,7 @@ def _bridge_secret():
 def _bridge_headers():
     return {
         "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     }
 
 def _bridge_initiate(payload: dict) -> requests.Response:
@@ -75,6 +76,7 @@ def _bridge_initiate(payload: dict) -> requests.Response:
             "secret":  _bridge_secret(),
             "payload": json.dumps(payload),
         },
+        headers=_bridge_headers(),
         timeout=15,
     )
 
@@ -87,6 +89,7 @@ def _bridge_status(order_id: str) -> dict | None:
                 "secret":   _bridge_secret(),
                 "order_id": order_id,
             },
+            headers=_bridge_headers(),
             timeout=10,
         )
         if resp.status_code == 200:
@@ -243,6 +246,7 @@ def initiate_payment(identity):
 
     try:
         resp = _bridge_initiate(payload)
+        logger.info(f"DEBUG: Bridge raw response: status={resp.status_code} text={resp.text}")
         data = resp.json()
         logger.info("Bridge initiate response status=%s body=%s", resp.status_code, data)
 

@@ -26,7 +26,7 @@ export default function Register() {
       localStorage.removeItem('smartcard_editor')
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
-      navigate(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
+      window.location.href = res.data.user.role === 'admin' ? '/admin' : '/dashboard'
     } catch (err) {
       setError('root', { message: err.response?.data?.error || 'Registration failed.' })
     }
@@ -43,7 +43,7 @@ export default function Register() {
         localStorage.removeItem('smartcard_editor')
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('user', JSON.stringify(res.data.user))
-        navigate(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
+        window.location.href = res.data.user.role === 'admin' ? '/admin' : '/dashboard'
       } catch (err) {
         setError('root', { message: err.response?.data?.error || 'Google signup failed.' })
       } finally {
