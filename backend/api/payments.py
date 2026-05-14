@@ -64,26 +64,29 @@ def _bridge_secret():
 
 def _bridge_headers():
     return {
-        "Content-Type":    "application/json",
-        "X-Bridge-Secret": _bridge_secret(),
+        "Content-Type": "application/x-www-form-urlencoded",
     }
 
 def _bridge_initiate(payload: dict) -> requests.Response:
-    """Call kairatechnologies.in bridge to initiate PhonePe payment."""
     return requests.post(
         _bridge_url(),
-        json={"action": "initiate", "payload": payload},
-        headers=_bridge_headers(),
+        data={
+            "action":  "initiate",
+            "secret":  _bridge_secret(),
+            "payload": json.dumps(payload),
+        },
         timeout=15,
     )
 
 def _bridge_status(order_id: str) -> dict | None:
-    """Call kairatechnologies.in bridge to get PhonePe order status."""
     try:
         resp = requests.post(
             _bridge_url(),
-            json={"action": "status", "order_id": order_id},
-            headers=_bridge_headers(),
+            data={
+                "action":   "status",
+                "secret":   _bridge_secret(),
+                "order_id": order_id,
+            },
             timeout=10,
         )
         if resp.status_code == 200:
