@@ -56,38 +56,41 @@ def _auth_url():
         else "https://api-preprod.phonepe.com/apis/identity-manager/v1/oauth/token"
     )
 
-# ── OAuth2 token cache ────────────────────────────────────────────────────────
-_token_cache = {"access_token": None, "expires_at": 0}
+def _bridge_url():
+    return os.getenv("PHONEPE_BRIDGE_URL", "").strip()
 
+def _bridge_secret():
+    return os.getenv("PHONEPE_BRIDGE_SECRET", "").strip()
 
-def _get_access_token() -> str:
-    """Fetch or return cached OAuth2 access token."""
-    cfg = _cfg()
-    now = time.time()
-    if _token_cache["access_token"] and now < _token_cache["expires_at"] - 60:
-        return _token_cache["access_token"]
+def _bridge_headers():
+    return {
+        "Content-Type":    "application/json",
+        "X-Bridge-Secret": _bridge_secret(),
+    }
 
-    resp = requests.post(
-        _auth_url(),
-        data={
-            "grant_type":     "client_credentials",
-            "client_id":      cfg["id"],
-            "client_secret":  cfg["secret"],
-            "client_version": str(cfg["version"]),
-        },
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-        timeout=10,
+def _bridge_initiate(payload: dict) -> requests.Response:
+    """Call kairatechnologies.in bridge to initiate PhonePe payment."""
+    return requests.post(
+        _bridge_url(),
+        json={"action": "initiate", "payload": payload},
+        headers=_bridge_headers(),
+        timeout=15,
     )
-    logger.info("PhonePe token response status=%s body=%s", resp.status_code, resp.text)
-    if resp.status_code != 200:
-        logger.error("PhonePe token fetch failed: %s %s", resp.status_code, resp.text)
-        raise RuntimeError(f"PhonePe auth failed: {resp.status_code} — {resp.text}")
 
-    data = resp.json()
-    _token_cache["access_token"] = data["access_token"]
-    _token_cache["expires_at"]   = now + int(data.get("expires_in", 3600))
-    logger.info("PhonePe access token refreshed, expires_in=%s", data.get("expires_in"))
-    return _token_cache["access_token"]
+def _bridge_status(order_id: str) -> dict | None:
+    """Call kairatechnologies.in bridge to get PhonePe order status."""
+    try:
+        resp = requests.post(
+            _bridge_url(),
+            json={"action": "status", "order_id": order_id},
+            headers=_bridge_headers(),
+            timeout=10,
+        )
+        if resp.status_code == 200:
+            return resp.json().get("state")
+    except Exception:
+        logger.exception("Bridge status call failed order=%s", order_id)
+    return None
 
 
 def _verify_webhook_signature(raw_body: bytes, auth_header: str) -> bool:
@@ -221,17 +224,11 @@ def initiate_payment(identity):
     finally:
         db.close()
 
-    # ── PhonePe v2 real payment ───────────────────────────────────────────────
+    # ── PhonePe via bridge (kairatechnologies.in) ────────────────────────────
     cfg = _cfg()
-    if not cfg["id"] or not cfg["secret"]:
-        logger.error("PhonePe credentials missing: CLIENT_ID=%r", cfg["id"])
-        return json_error(500, "PhonePe credentials not configured.")
-
-    try:
-        token = _get_access_token()
-    except Exception as e:
-        logger.exception("PhonePe token error")
-        return json_error(502, f"Payment gateway auth failed: {str(e)}")
+    if not _bridge_url():
+        logger.error("PHONEPE_BRIDGE_URL not configured")
+        return json_error(500, "Payment gateway not configured.")
 
     payload = {
         "merchantOrderId": order_id,
@@ -242,20 +239,9 @@ def initiate_payment(identity):
     }
 
     try:
-        resp = requests.post(
-            f"{_pg_base()}/checkout/v2/pay",
-            json=payload,
-            headers={
-                "Content-Type":     "application/json",
-                "Authorization":    f"O-Bearer {token}",
-                "X-Client-Id":      cfg["id"],
-                "X-Client-Version": str(cfg["version"]),
-            },
-            timeout=15,
-        )
+        resp = _bridge_initiate(payload)
         data = resp.json()
-        logger.info("PhonePe initiate response status=%s body=%s", resp.status_code, data)
-        logger.info("PhonePe payload sent=%s", payload)
+        logger.info("Bridge initiate response status=%s body=%s", resp.status_code, data)
 
         redirect_url = (
             data.get("redirectUrl")
@@ -265,11 +251,11 @@ def initiate_payment(identity):
         if resp.status_code in (200, 201) and redirect_url:
             return json_resp(200, {"redirect_url": redirect_url, "order_id": order_id})
 
-        logger.error("PhonePe initiate failed: %s", data)
+        logger.error("Bridge initiate failed: %s", data)
         return json_error(502, data.get("message", "Payment gateway error."))
 
     except Exception:
-        logger.exception("PhonePe API call failed")
+        logger.exception("Bridge API call failed")
         return json_error(502, "Could not reach payment gateway.")
 
 
@@ -352,24 +338,8 @@ def payment_status(identity):
     if not order_id:
         return json_error(400, "order_id required.")
 
-    # Also poll PhonePe directly for latest status
-    live_state = None
-    try:
-        cfg = _cfg()
-        token = _get_access_token()
-        with requests.get(
-            f"{_pg_base()}/checkout/v2/order/{order_id}/status",
-            headers={
-                "Authorization":    f"O-Bearer {token}",
-                "X-Client-Id":      cfg["id"],
-                "X-Client-Version": str(cfg["version"]),
-            },
-            timeout=10,
-        ) as resp:
-            if resp.status_code == 200:
-                live_state = resp.json().get("state")
-    except Exception:
-        logger.exception("PhonePe status poll failed order=%s", order_id)
+    # Also poll PhonePe via bridge for latest status
+    live_state = _bridge_status(order_id)
 
     db = get_db()
     try:
