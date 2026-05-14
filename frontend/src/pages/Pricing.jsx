@@ -105,7 +105,12 @@ export default function Pricing() {
         await new Promise(r => setTimeout(r, 500))
         navigate('/payment/success?order_id=' + res.data.order_id)
       } else {
-        window.location.href = res.data.redirect_url
+        // Hide the kairavcard.com referrer from PhonePe
+        const link = document.createElement('a');
+        link.href = res.data.redirect_url;
+        link.rel = 'noreferrer';
+        document.body.appendChild(link);
+        link.click();
       }
     } catch (err) {
       alert(err.response?.data?.error || 'Payment initiation failed. Please try again.')
