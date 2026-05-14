@@ -194,7 +194,7 @@ def initiate_payment(identity):
             coupon_id = coupon["id"]
             amount = max(amount - discount, 0)
 
-        order_id = f"SC_{user_id}_{uuid.uuid4().hex[:12].upper()}"
+        order_id = f"SC-{user_id}-{uuid.uuid4().hex[:12].upper()}"
 
         # Save pending payment record
         with db.cursor() as cur:
