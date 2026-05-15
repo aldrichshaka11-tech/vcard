@@ -26,7 +26,6 @@ const LINK_CONFIG = {
   website:   { icon: <Globe     size={17} />, color: 'bg-indigo-600 hover:bg-indigo-700' },
 }
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeNiaF_qV0h8GoMSq90Guhwu2PbStUx_M942fQnPtKw0mPRKhej89A1fvjXQEp2U_u/exec'
 
 export default function PublicCard() {
   const { slug } = useParams()
@@ -52,11 +51,12 @@ export default function PublicCard() {
     e.preventDefault()
     setFormStatus('sending')
     try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ slug, ...form }),
+      await api.post('/leads', {
+        slug,
+        name: form.name,
+        email: form.email,
+        phone: form.mobile,
+        note: form.message
       })
       setFormStatus('sent')
       setForm({ name: '', email: '', mobile: '', message: '' })
