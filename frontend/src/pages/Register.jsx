@@ -54,14 +54,17 @@ export default function Register() {
   })
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex" style={{ fontFamily: "'Roboto', sans-serif" }}>
 
       {/* Left branding panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#c14f3e] flex-col justify-between p-12 relative">
         <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <img src="/favicon.png" alt="Kaira" className="w-10 h-10 object-contain" />
-            <span className="text-white font-black text-2xl tracking-tight uppercase">KairavCard</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img src="/favicon.png" alt="Kaira" className="w-10 h-10 object-contain" />
+              <span className="text-white font-black text-2xl tracking-tight uppercase">KairavCard</span>
+            </div>
+            <Link to="/" className="text-white/80 hover:text-white text-sm font-bold transition-colors">← HOME</Link>
           </div>
         </div>
 
@@ -88,24 +91,23 @@ export default function Register() {
         </div>
 
         <div className="relative z-10">
-          <p className="text-white/50 text-xs">No credit card required · Free forever</p>
         </div>
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#ede7e1]">
         <div className="w-full max-w-md">
 
           {/* Mobile logo */}
           <div className="flex items-center justify-between mb-8 lg:hidden">
             <span className="font-black text-[#1a1a1a] text-2xl uppercase tracking-tighter">KairavCard</span>
-            <Link to="/" className="text-sm text-gray-500 hover:text-[#c14f3e] transition-colors">← Home</Link>
+            <Link to="/" className="text-sm text-[#64748b] hover:text-[#c14f3e] transition-colors font-bold">← Home</Link>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <div className="mb-7">
-              <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-              <p className="text-gray-500 text-sm mt-1">Get started — it's free, no credit card needed</p>
+          <div className="bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 p-8 sm:p-10">
+            <div className="mb-8">
+              <h1 className="text-3xl font-black text-[#0F172A] tracking-tight">Create your account</h1>
+              <p className="text-[#64748b] text-sm mt-2">Get started and create your digital identity today</p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -116,7 +118,7 @@ export default function Register() {
                   <input
                     type="text"
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c14f3e] focus:border-transparent transition"
                     {...register('name', { required: 'Name is required.' })}
                   />
                 </div>
@@ -130,7 +132,7 @@ export default function Register() {
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c14f3e] focus:border-transparent transition"
                     {...register('email', { required: 'Email is required.' })}
                   />
                 </div>
@@ -144,7 +146,7 @@ export default function Register() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Min. 6 characters"
-                    className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-10 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#c14f3e] focus:border-transparent transition"
                     {...register('password', { required: 'Password is required.', minLength: { value: 6, message: 'Min. 6 characters.' } })}
                   />
                   <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -163,7 +165,7 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-[#1a1a1a] hover:bg-black disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-sm rounded-full transition shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)]"
               >
                 {isSubmitting ? (
                   <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Creating account...</>
@@ -183,18 +185,18 @@ export default function Register() {
               type="button"
               onClick={() => googleLogin()}
               disabled={googleLoading}
-              className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-gray-700 font-medium text-sm rounded-xl transition"
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-[#0F172A] font-bold text-sm rounded-full transition"
             >
               {googleLoading
-                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-violet-500 rounded-full animate-spin" />
+                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-[#c14f3e] rounded-full animate-spin" />
                 : GOOGLE_SVG
               }
               Continue with Google
             </button>
 
-            <p className="text-center text-sm text-gray-500 mt-6">
+            <p className="text-center text-sm text-[#64748b] mt-8">
               Already have an account?{' '}
-              <Link to="/login" className="text-violet-600 font-semibold hover:text-violet-700">Sign in</Link>
+              <Link to="/login" className="text-[#c14f3e] font-bold hover:text-[#a03d2f] transition-colors">Sign in</Link>
             </p>
           </div>
         </div>

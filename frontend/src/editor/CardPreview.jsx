@@ -103,6 +103,16 @@ export default function CardPreview({ card = {}, editable = false, onLayoutChang
     return `rgba(${r},${g},${b},${alpha})`
   }
 
+  const isLightText = card.virtualBg?.enabled && card.virtualBg?.fontColor === 'light'
+  const tc = {
+    primary:   isLightText ? 'text-white' : 'text-gray-900',
+    secondary: isLightText ? 'text-white/80' : 'text-gray-600',
+    tertiary:  isLightText ? 'text-white/60' : 'text-gray-400',
+    company:   isLightText ? 'text-white/90' : 'text-gray-700',
+    fieldVal:  isLightText ? 'text-white/90' : 'text-gray-700',
+    fieldLabel:isLightText ? 'text-white/60' : 'text-gray-400',
+  }
+
   return (
     <>
       {/* ── Phone frame ── */}
@@ -212,10 +222,10 @@ export default function CardPreview({ card = {}, editable = false, onLayoutChang
                 {/* Info */}
                 <div className="px-4 pb-6 space-y-2.5 pt-1">
                   <div>
-                    <h1 className="text-lg font-bold text-gray-900 leading-tight">{card.name || 'Your Name'}</h1>
-                    {card.jobTitle    && <p className="text-xs text-gray-600 mt-0.5">{card.jobTitle}</p>}
-                    {card.department  && <p className="text-[11px] text-gray-400">{card.department}</p>}
-                    {card.companyName && <p className="text-xs font-semibold text-gray-700 mt-0.5">{card.companyName}</p>}
+                    <h1 className={`text-lg font-bold leading-tight ${tc.primary}`}>{card.name || 'Your Name'}</h1>
+                    {card.jobTitle    && <p className={`text-xs mt-0.5 ${tc.secondary}`}>{card.jobTitle}</p>}
+                    {card.department  && <p className={`text-[11px] ${tc.tertiary}`}>{card.department}</p>}
+                    {card.companyName && <p className={`text-xs font-semibold mt-0.5 ${tc.company}`}>{card.companyName}</p>}
                     {card.accreditations && (
                       <div className="flex flex-wrap gap-1 mt-1.5">
                         {card.accreditations.split(',').map((a, i) => (
@@ -229,7 +239,7 @@ export default function CardPreview({ card = {}, editable = false, onLayoutChang
                   </div>
 
                   {card.headline && (
-                    <p className="text-[11px] text-gray-500 leading-relaxed">{card.headline}</p>
+                    <p className={`text-[11px] leading-relaxed ${tc.secondary}`}>{card.headline}</p>
                   )}
 
                   {/* Lead context */}
@@ -256,8 +266,8 @@ export default function CardPreview({ card = {}, editable = false, onLayoutChang
                           style={{ background: hexAlpha(theme, 0.07) }}>
                           <span style={{ color: theme }}>{ICON_MAP[f.key] || <LinkIcon size={15} />}</span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[9px] text-gray-400 leading-none mb-0.5">{f.label}</p>
-                            <p className="text-[11px] text-gray-700 truncate">{f.value}</p>
+                            <p className={`text-[9px] leading-none mb-0.5 ${tc.fieldLabel}`}>{f.label}</p>
+                            <p className={`text-[11px] truncate ${tc.fieldVal}`}>{f.value}</p>
                           </div>
                         </div>
                       ))}

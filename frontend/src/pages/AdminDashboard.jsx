@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, CreditCard, TrendingUp, ArrowRight, BarChart2, Eye, FileText, DollarSign, Shield } from 'lucide-react'
+import { Users, CreditCard, TrendingUp, ArrowRight, BarChart2, Eye, FileText, IndianRupee, Shield } from 'lucide-react'
 import axios from '../api/axios'
 import { useAuth } from '../api/useAuth'
 import Navbar from '../components/Navbar'
@@ -80,7 +80,7 @@ export default function AdminDashboard() {
         <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
           {[
             { id: 'overview', label: 'Overview', icon: <BarChart2 size={14} /> },
-            { id: 'transactions', label: 'Transactions', icon: <DollarSign size={14} /> },
+            { id: 'transactions', label: 'Transactions', icon: <IndianRupee size={14} /> },
           ].map(tab => (
             <button
               key={tab.id}
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
               <button onClick={() => setActiveTab('transactions')} className="flex items-center justify-between p-4 bg-white border-2 border-slate-100 rounded-2xl shadow-sm hover:border-green-300 hover:bg-green-50/40 hover:shadow-md transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                    <DollarSign size={16} className="text-green-600" />
+                    <IndianRupee size={16} className="text-green-600" />
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-semibold text-gray-800">Transactions</p>

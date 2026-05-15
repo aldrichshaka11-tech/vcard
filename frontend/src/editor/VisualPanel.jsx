@@ -292,6 +292,24 @@ export default function VisualPanel({ card, update, updateNested }) {
                   }} />
                 </label>
               </div>
+              {/* Text Color Toggle */}
+              <div className="pt-2 border-t border-gray-100">
+                <p className="text-xs text-gray-500 mb-2 font-medium">Card Text Color</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => updateNested('virtualBg', 'fontColor', 'dark')}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${(!card.virtualBg.fontColor || card.virtualBg.fontColor === 'dark') ? 'bg-gray-800 text-white border-gray-800' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`}
+                  >
+                    Dark Text
+                  </button>
+                  <button
+                    onClick={() => updateNested('virtualBg', 'fontColor', 'light')}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${card.virtualBg.fontColor === 'light' ? 'bg-white text-gray-900 border-gray-300 shadow-sm' : 'bg-gray-50 text-gray-400 border-gray-200 hover:bg-gray-100'}`}
+                  >
+                    Light Text
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

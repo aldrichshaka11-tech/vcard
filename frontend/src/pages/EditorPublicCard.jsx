@@ -103,6 +103,7 @@ export default function EditorPublicCard() {
   const vBgEnabled = metaByType('meta_vBg_enabled') === 'true'
   const vBgPreset = metaByType('meta_vBg_preset') || ''
   const vBgCustomFile = metaByType('meta_vBg_custom') || ''
+  const vBgFontColor = metaByType('meta_fontColor') || 'dark'
   
   // Dynamic base URL for local vs production
   const uploadsBase = import.meta.env.MODE === 'production'
@@ -116,6 +117,16 @@ export default function EditorPublicCard() {
         ? { backgroundImage: `url(${vBgCustomFile.startsWith('http') ? vBgCustomFile : uploadsBase + vBgCustomFile})`, backgroundSize: 'cover', backgroundPosition: 'center' }
         : { background: vBgPreset ? `linear-gradient(135deg, ${vBgPreset})` : '#f3f4f6' }
       : { background: '#f3f4f6' }
+
+  const isLightText = vBgEnabled && vBgFontColor === 'light'
+  const tc = {
+    primary:   isLightText ? 'text-white' : 'text-gray-900',
+    secondary: isLightText ? 'text-white/80' : 'text-gray-600',
+    tertiary:  isLightText ? 'text-white/60' : 'text-gray-400',
+    company:   isLightText ? 'text-white/90' : 'text-gray-700',
+    fieldVal:  isLightText ? 'text-white/90' : 'text-gray-700',
+    fieldLabel:isLightText ? 'text-white/60' : 'text-gray-400',
+  }
 
   const fields = [
     displayEmail && { key: 'email', label: 'Email', value: displayEmail, href: `mailto:${displayEmail}` },
@@ -257,10 +268,10 @@ export default function EditorPublicCard() {
         {/* Info */}
         <div className="px-6 pb-6 space-y-3 pt-2">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{displayName}</h1>
-            {displayTitle && <p className="text-sm text-gray-600 mt-0.5">{displayTitle}</p>}
-            {department && <p className="text-xs text-gray-400">{department}</p>}
-            {displayCompany && <p className="text-sm font-medium text-gray-700 mt-1">{displayCompany}</p>}
+            <h1 className={`text-2xl font-bold ${tc.primary}`}>{displayName}</h1>
+            {displayTitle && <p className={`text-sm mt-0.5 ${tc.secondary}`}>{displayTitle}</p>}
+            {department && <p className={`text-xs ${tc.tertiary}`}>{department}</p>}
+            {displayCompany && <p className={`text-sm font-medium mt-1 ${tc.company}`}>{displayCompany}</p>}
             {accreditations && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {accreditations.split(',').map((a, i) => (
@@ -273,7 +284,7 @@ export default function EditorPublicCard() {
           </div>
 
           {displayBio && (
-            <p className="text-sm text-gray-500 leading-relaxed">{displayBio}</p>
+            <p className={`text-sm leading-relaxed ${tc.secondary}`}>{displayBio}</p>
           )}
 
           {/* Fields */}
@@ -284,8 +295,8 @@ export default function EditorPublicCard() {
                   <div className="flex items-center gap-3 px-3 py-2 rounded-xl" style={{ background: `${themeColor}10` }}>
                     <span style={{ color: themeColor }}>{ICON_MAP[f.key] || <LinkIcon size={16} />}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-400">{f.label}</p>
-                      <p className="text-sm text-gray-700 truncate">{f.value}</p>
+                      <p className={`text-xs ${tc.fieldLabel}`}>{f.label}</p>
+                      <p className={`text-sm truncate ${tc.fieldVal}`}>{f.value}</p>
                     </div>
                   </div>
                 )

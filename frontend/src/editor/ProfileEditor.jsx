@@ -161,6 +161,7 @@ export default function ProfileEditor() {
         enabled: metaByType('meta_vBg_enabled') === 'true',
         preset:  metaByType('meta_vBg_preset')  || '',
         custom:  constructImageUrl(vBgFile),
+        fontColor: metaByType('meta_fontColor') || 'dark',
       },
       ...(savedLayout ? { layout: savedLayout } : {}),
       ...socialData,
@@ -276,6 +277,7 @@ export default function ProfileEditor() {
           ...(card.virtualBg?.enabled ? [{ type: 'meta_vBg_enabled', label: 'Virtual BG Enabled', url: 'true' }] : []),
           ...(card.virtualBg?.preset ? [{ type: 'meta_vBg_preset', label: 'Virtual BG Preset', url: card.virtualBg.preset }] : []),
           ...(virtualBgFilename ? [{ type: 'meta_vBg_custom', label: 'Virtual BG Custom', url: virtualBgFilename }] : []),
+          ...(card.virtualBg?.fontColor ? [{ type: 'meta_fontColor', label: 'Virtual BG Font Color', url: card.virtualBg.fontColor }] : []),
           ...(profileFilename ? [{ type: 'meta_profile', label: 'Profile Photo', url: profileFilename }] : []),
           ...(coverFilename ? [{ type: 'meta_cover', label: 'Cover Photo', url: coverFilename }] : []),
           ...(logoFilename ? [{ type: 'meta_logo', label: 'Company Logo', url: logoFilename }] : []),
@@ -724,27 +726,17 @@ export default function ProfileEditor() {
                           {presets.map(p => {
                             const applied = isPresetApplied(p)
                             return (
-                              <div key={p.id} className="flex items-center">
-                                <button
-                                  onClick={() => applyPreset(p)}
-                                  className={`text-xs py-1.5 px-3 rounded-l-lg border font-medium transition-all ${
-                                    applied
-                                      ? 'bg-amber-50 border-amber-300 text-amber-700'
-                                      : 'bg-white border-gray-200 text-gray-600 hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700'
-                                  }`}
-                                >
-                                  {p.label}
-                                </button>
-                                {applied && (
-                                  <button
-                                    onClick={() => clearPreset(p)}
-                                    title="Remove preset"
-                                    className="text-xs py-1.5 px-2 rounded-r-lg border border-l-0 border-red-200 bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-all font-bold"
-                                  >
-                                    ×
-                                  </button>
-                                )}
-                              </div>
+                              <button
+                                key={p.id}
+                                onClick={() => applyPreset(p)}
+                                className={`text-xs py-1.5 px-3 rounded-lg border font-medium transition-all ${
+                                  applied
+                                    ? 'bg-amber-50 border-amber-300 text-amber-700'
+                                    : 'bg-white border-gray-200 text-gray-600 hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700'
+                                }`}
+                              >
+                                {p.label}
+                              </button>
                             )
                           })}
                         </div>

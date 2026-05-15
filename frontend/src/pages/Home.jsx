@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import snake from '../assets/snake.png'
 
 export default function Home() {
   const [activeStep, setActiveStep] = useState(0)
@@ -108,8 +109,24 @@ export default function Home() {
         }
         .landing-page .logo span { color: #4b98b4; }
         .landing-page .nav-links { display: flex; gap: 48px; list-style: none; align-items: center; }
-        .landing-page .nav-links a { text-decoration: none; color: #6B7280; font-size: 15px; font-weight: 500; transition: all 0.3s ease; }
+        .landing-page .nav-links a {
+          text-decoration: none; color: #444; font-weight: 500; font-size: 15px; transition: 0.3s;
+          position: relative; padding: 5px 0;
+        }
+
+        .landing-page .nav-links a::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: #4b98b4;
+          transition: width 0.3s ease;
+        }
+
         .landing-page .nav-links a:hover { color: #4b98b4; }
+        .landing-page .nav-links a:hover::after { width: 100%; }
         .landing-page .nav-cta { 
           background: #4b98b4 !important; color: #fff !important; 
           padding: 12px 28px; border-radius: 50px; font-weight: 600 !important; 
@@ -150,24 +167,159 @@ export default function Home() {
 
         /* Hero */
         .landing-page .hero {
-          background-color: #ede7e1; display: flex; align-items: center; 
-          position: relative; padding: 120px 60px 20px; color: #1a1a1a;
+          background-color: #f8fafc; display: flex; align-items: center; 
+          position: relative; padding: 140px 60px 80px; color: #1a1a1a;
+          overflow: hidden;
         }
+
+        @media (max-width: 991px) {
+          .landing-page .hero { padding: 120px 24px 60px; flex-direction: column; text-align: center; min-height: auto; }
+          .landing-page .hero > div { flex-direction: column !important; align-items: center !important; }
+          .hero-text { max-width: 100% !important; order: 1; margin-bottom: 40px; }
+          .hero-modern-image { width: 100% !important; order: 2; margin-top: 20px; }
+          .phone-container { transform: none !important; height: 550px !important; margin: 0 auto; }
+          .phone-frame { transform: rotate(0) !important; left: 50% !important; transform: translateX(-50%) !important; }
+          .phone-screen-content { transform: rotate(0) !important; left: 50% !important; transform: translateX(-50%) !important; }
+          .landing-page .hero h1 { font-size: 42px !important; margin: 0 auto 20px !important; }
+          .landing-page .hero p { margin: 0 auto 30px !important; font-size: 16px !important; }
+          .landing-page .hero-modern-btns { justify-content: center !important; }
+        }
+
+        @media (max-width: 480px) {
+          .phone-container { height: 420px !important; }
+          .landing-page .hero h1 { font-size: 34px !important; }
+        }
+        
+        /* Background Decorations */
+        .hero-bg-decorations { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+        .decor-circle { 
+          position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(75, 152, 180, 0.1) 0%, transparent 70%); 
+        }
+        .decor-1 { width: 600px; height: 600px; right: -50px; top: -50px; z-index: 0; }
+        .decor-2 { width: 400px; height: 400px; right: 20%; bottom: -50px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%); z-index: 0; }
+        .decor-3 { 
+          position: absolute; width: 350px; height: 350px; right: 10%; bottom: 10%; 
+          background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); 
+          z-index: 0; border-radius: 50%;
+        }
+        .decor-4 {
+          position: absolute; width: 250px; height: 250px; right: 35%; top: 15%;
+          background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+          z-index: 0; border-radius: 50%;
+        }
+        
+        .dots-grid {
+          position: absolute; width: 180px; height: 180px; 
+          background-image: radial-gradient(circle, #4b98b4 1.5px, transparent 1.5px);
+          background-size: 15px 15px; opacity: 0.15;
+          border-radius: 50%;
+          z-index: 0;
+        }
+        .dots-1 { top: 22%; right: 36%; left: auto; }
+        .dots-2 { bottom: 10%; right: 2%; }
+
+        .arrow-decor {
+          position: absolute; width: 180px; height: auto;
+          opacity: 0.6; transform: rotate(10deg);
+          z-index: 0;
+        }
+        .arrow-1 { bottom: 12%; left: 48%; }
+        
+        .hero-badge {
+          display: inline-flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #dcfce7;
+          padding: 8px 16px; border-radius: 100px; font-size: 14px; font-weight: 600; color: #166534;
+          margin-bottom: 24px;
+        }
+        .hero-badge span { font-size: 18px; }
         .hero-modern-content { max-width: 650px; text-align: left; }
-        .hero-modern-h1 { font-size: clamp(40px, 6vw, 85px); font-weight: 800; line-height: 1.05; margin-bottom: 30px; letter-spacing: -3px; }
+        .hero-modern-h1 { font-family: 'Roboto', sans-serif; font-size: clamp(40px, 6vw, 85px); font-weight: 800; line-height: 1.05; margin-bottom: 30px; letter-spacing: -3px; }
         .hero-modern-p { font-size: clamp(18px, 1.4vw, 22px); line-height: 1.6; color: #444; margin-bottom: 45px; }
         .hero-modern-btns { display: flex; gap: 20px; flex-wrap: wrap; }
         .btn-modern-primary { 
-          background-color: #c14f3e; color: #fff; padding: 18px 45px; border-radius: 50px; 
+          background-color: #1a1a1a; color: #fff; padding: 18px 45px; border-radius: 50px; 
           font-weight: 700; text-decoration: none; transition: all 0.3s ease; 
-          box-shadow: 0 10px 25px rgba(193, 79, 62, 0.3);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         .btn-modern-secondary { 
           background-color: #1a1a1a; color: #fff; padding: 18px 45px; 
           border-radius: 50px; font-weight: 700; text-decoration: none;
         }
-        .hero-modern-image { flex: 1; display: flex; justify-content: center; }
-        .hero-modern-image img { width: 100%; max-width: 600px; height: auto; }
+        .hero-modern-image { 
+          flex: 1; 
+          display: flex; 
+          justify-content: center; 
+          position: relative;
+          perspective: 1000px;
+        }
+        .phone-container {
+          position: relative;
+          width: 100%;
+          max-width: 700px;
+          height: 600px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transform: translateX(80px);
+          z-index: 2;
+        }
+        .phone-frame {
+          position: absolute;
+          width: 320px;
+          height: 650px;
+          background: #1a1a1a;
+          border-radius: 40px;
+          padding: 12px;
+          box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+          border: 4px solid #333;
+          overflow: hidden;
+          transition: all 0.5s ease;
+        }
+        .phone-frame::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 120px;
+          height: 30px;
+          background: #000;
+          border-bottom-left-radius: 20px;
+          border-bottom-right-radius: 20px;
+          z-index: 10;
+        }
+        .phone-1 {
+          transform: rotate(-10deg) translateX(-80px);
+          z-index: 2;
+        }
+        .phone-2 {
+          transform: rotate(10deg) translateX(80px);
+          z-index: 1;
+          opacity: 0.8;
+          filter: blur(1px);
+        }
+        .phone-container:hover .phone-1 { transform: rotate(-5deg) translateX(-50px) translateY(-10px); z-index: 3; }
+        .phone-container:hover .phone-2 { transform: rotate(5deg) translateX(50px) translateY(-10px); opacity: 1; filter: blur(0); }
+        
+        .phone-screen {
+          width: 100%;
+          height: 100%;
+          background: #000;
+          border-radius: 30px;
+          overflow: hidden;
+          position: relative;
+        }
+        .phone-screen video, .phone-screen img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+          .phone-container { height: 500px; }
+          .phone-frame { width: 260px; height: 520px; }
+          .phone-1 { transform: rotate(-5deg) translateX(-30px); }
+          .phone-2 { display: none; }
+        }
 
         /* Features */
         .landing-page section { padding: 30px 60px 20px; }
@@ -177,43 +329,135 @@ export default function Home() {
         .landing-page .features-grid { 
           display: flex; flex-wrap: wrap; gap: 32px; max-width: 1300px; margin: 0 auto; justify-content: center; 
         }
+        .landing-page .feature-icon { 
+          width: 64px; height: 64px; background: #0F172A; display: flex; 
+          align-items: center; justify-content: center; border-radius: 18px; 
+          font-size: 28px; margin-bottom: 24px; color: #10b981;
+          box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+          border: 1px solid rgba(255,255,255,0.1);
+        }
         .landing-page .feature-cell { 
-          flex: 1 1 380px; max-width: 420px; background: #c14f3e; padding: 56px 48px; 
-          border-radius: 32px; transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); color: #fff;
+          flex: 1 1 380px; max-width: 420px; background: #f8fafc; padding: 56px 48px; 
+          border-radius: 32px; transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); color: #0F172A;
           position: relative; overflow: hidden;
           perspective: 1000px;
           transform-style: preserve-3d;
+          border: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 
+            inset 8px 0 15px -10px rgba(16, 185, 129, 0.3),
+            inset -8px 0 15px -10px rgba(16, 185, 129, 0.3),
+            0 20px 40px rgba(0,0,0,0.05);
         }
         
-        /* Shining Effect Overlay */
+        .landing-page .feature-cell::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, transparent 40%, transparent 60%, rgba(16, 185, 129, 0.12) 100%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .feature-hover-img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0;
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1;
+          transform: scale(1.1);
+        }
+
+        .landing-page .feature-cell.show-normal-img .feature-hover-img {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        .landing-page .feature-cell.show-normal-img .feature-cell-content {
+          opacity: 0;
+        }
+
+        .landing-page .feature-cell:hover .feature-hover-img {
+          opacity: 1;
+          transform: scale(1);
+          filter: none;
+        }
+
+        .feature-cell-content {
+          position: relative;
+          z-index: 2;
+          transition: all 0.4s ease;
+        }
+
+        /* Default: Hide content on hover (for text-first cards) */
+        .landing-page .feature-cell:not(.show-normal-img):hover .feature-cell-content {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+
+        /* For Image-first cards: Show content on hover */
+        .landing-page .feature-cell.show-normal-img:hover .feature-cell-content {
+          opacity: 1;
+          transform: translateY(0);
+          color: #fff;
+        }
+
+        .landing-page .feature-cell.show-normal-img:hover p { color: rgba(255,255,255,0.9); }
+        .landing-page .feature-cell.show-normal-img:hover h3 { color: #fff; }
+
+        .landing-page .feature-cell:hover .feature-hover-img {
+          opacity: 1;
+          transform: scale(1.05);
+          filter: brightness(0.4); 
+        }
+
+        /* Ensure regular cards show full clear image on hover */
+        .landing-page .feature-cell:not(.show-normal-img):hover .feature-hover-img {
+          filter: none;
+          opacity: 1;
+        }
+
+        .landing-page .feature-cell:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+          background: #4b98b4; /* Fallback/Brand color during transition */
+        }
+
         .landing-page .feature-cell::after {
           content: "";
           position: absolute;
-          top: 0;
+          top: -50%;
           left: -150%;
-          width: 30%;
-          height: 100%;
+          width: 50%;
+          height: 200%;
           background: linear-gradient(
             to right,
             transparent,
             rgba(255, 255, 255, 0.4),
             transparent
           );
-          transform: none;
-          transition: all 0.8s ease;
+          transform: rotate(25deg);
+          transition: none;
           pointer-events: none;
+          z-index: 3;
           opacity: 0;
         }
         
-        .landing-page .feature-cell:hover {
-          transform: rotateY(-15deg) translateY(-10px) scale(1.02);
-          box-shadow: 0 25px 60px rgba(193, 79, 62, 0.4);
-        }
-        
         .landing-page .feature-cell:hover::after {
-          left: 100%;
+          left: 150%;
           opacity: 1;
-          transition: all 0.6s ease;
+          transition: all 0.6s ease-in-out;
+        }
+
+        .landing-page .feature-cell:hover {
+          transform: rotateY(-10deg) translateY(-10px) scale(1.02);
+          box-shadow: 
+            inset 12px 0 20px -10px rgba(16, 185, 129, 0.5),
+            inset -12px 0 20px -10px rgba(16, 185, 129, 0.5),
+            0 30px 60px rgba(0,0,0,0.1);
+          border-color: rgba(16, 185, 129, 0.2);
         }
         @media (min-width: 992px) {
           .landing-page .feature-cell { flex: 0 0 calc(33.33% - 32px); }
@@ -547,14 +791,22 @@ export default function Home() {
 
         /* Stacking Cards Section */
         .landing-page .stacking-section {
-          padding: 20px 60px 0; /* Further reduced top padding */
-          background: #ffffff;
+          padding: 80px 60px;
+          background: #ffffff; /* Section background to white */
           position: relative;
+        }
+
+        .landing-page .stacking-section .section-title {
+          color: #0F172A;
+        }
+
+        .landing-page .stacking-section .section-desc {
+          color: #6B7280;
         }
 
         .landing-page .stack-container {
           max-width: 1100px;
-          margin: 0 auto;
+          margin: 60px auto 0;
           display: flex;
           flex-direction: column;
           gap: 0;
@@ -572,10 +824,10 @@ export default function Home() {
           align-items: center;
           gap: 60px;
           margin-bottom: 400px;
-          // box-shadow: 0 40px 100px rgba(0,0,0,0.3);
-          background: #4b98b4;
-          border: 1px solid rgba(255,255,255,0.15);
+          background: #4b98b4; /* Card background to blue */
+          border: 1px solid rgba(255,255,255,0.1);
           transition: all 0.3s ease;
+          box-shadow: 0 40px 100px rgba(0,0,0,0.1);
         }
 
         .landing-page .stack-card:nth-child(1) { z-index: 1; }
@@ -593,7 +845,7 @@ export default function Home() {
 
         .landing-page .stack-card p {
           font-size: 20px;
-          color: rgba(255,255,255,0.9);
+          color: rgba(255,255,255,0.8);
           max-width: 500px;
           line-height: 1.6;
         }
@@ -616,13 +868,48 @@ export default function Home() {
         }
 
         /* Footer */
-        .landing-page .modern-footer { background: #c14f3e; color: #fff; padding: 80px 80px 40px; border-radius: 80px 80px 0 0; margin-top: 0; }
-        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 60px; }
-        .footer-col-title { font-weight: 700; font-size: 18px; margin-bottom: 24px; }
+        .landing-page .modern-footer { background: #000000; color: #fff; padding: 80px 80px 40px; border-radius: 80px 80px 0 0; margin-top: 0; }
+        .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+        .footer-logo-col { display: flex; flex-direction: column; gap: 20px; }
+        .footer-logo-col .logo { color: #fff; font-size: 24px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .footer-logo-col .logo span { color: #4b98b4; }
+        .footer-logo-col p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; max-width: 250px; }
+        .footer-col-title { font-weight: 700; font-size: 18px; margin-bottom: 24px; color: #fff; }
         .footer-links { list-style: none; display: flex; flex-direction: column; gap: 16px; }
-        .footer-links a { text-decoration: none; color: rgba(255,255,255,0.7); transition: 0.3s; }
-        .footer-links a:hover { color: #fff; padding-left: 5px; }
-        .big-brand-text { font-weight: 900; font-size: clamp(60px, 15vw, 240px); line-height: 0.75; letter-spacing: -0.06em; margin-top: 40px; }
+        .footer-links li { color: rgba(255,255,255,0.7); transition: 0.3s; cursor: default; }
+        .footer-links li:hover { color: #4b98b4; }
+        .big-brand-text { font-weight: 900; font-size: clamp(40px, 10vw, 160px); line-height: 0.75; letter-spacing: -0.06em; margin-top: 40px; color: rgba(255, 255, 255, 0.2); overflow: hidden; white-space: nowrap; }
+
+        @media (max-width: 991px) {
+          .landing-page .modern-footer { padding: 60px 40px 40px; border-radius: 40px 40px 0 0; }
+          .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+          .footer-logo-col { grid-column: span 2; align-items: center; text-align: center; margin-bottom: 20px; }
+          .footer-logo-col p { max-width: 400px; }
+        }
+
+        @media (max-width: 580px) {
+          .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; text-align: center; }
+          .footer-logo-col { grid-column: span 2; align-items: center; text-align: center; }
+          .footer-links { align-items: center; }
+          .footer-col { display: flex; flex-direction: column; align-items: center; }
+        }
+        
+        .marquee-container {
+          display: flex;
+          gap: 100px;
+          animation: scroll 20s linear infinite;
+          width: fit-content;
+        }
+
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 50px)); }
+        }
+
+        .marquee-text {
+          flex-shrink: 0;
+          display: inline-block;
+        }
         
         .floating-whatsapp {
           position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; 
@@ -637,7 +924,7 @@ export default function Home() {
       <nav>
         <Link to="/" className="logo">
           <img src="/favicon.png" alt="Kaira" style={{ width: '32px' }} />
-          Kaira<span>Technology</span>
+          Kaira<span>Technologies</span>
         </Link>
         <button className="menu-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? '✕' : '☰'}
@@ -651,19 +938,45 @@ export default function Home() {
       </nav>
 
       <section className="hero">
-        <div style={{ display: 'flex', alignItems: 'center', width: '100%', maxWidth: '1400px', margin: '0 auto', flexWrap: 'wrap' }}>
+        <div className="hero-bg-decorations">
+          <div className="decor-circle decor-1" />
+          <div className="decor-circle decor-2" />
+          <div className="decor-circle decor-3" />
+          <div className="decor-circle decor-4" />
+          <div className="dots-grid dots-1" />
+          <div className="dots-grid dots-2" />
+          <img src={snake} className="arrow-decor arrow-1" alt="Snake decoration" />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', width: '100%', maxWidth: '1400px', margin: '0 auto', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           <div style={{ flex: 1, minWidth: '300px' }}>
             <div className="hero-modern-content">
-              <h1 className="hero-modern-h1">Your Business Card is <span style={{color: '#c14f3e'}}>Dead.</span> <br />Welcome to the <span style={{color: '#4b98b4'}}>Smart VCard Era.</span></h1>
+              <div className="hero-badge"><span>✧</span> #1 Smart Digital Business Card Platform</div>
+              <h1 className="hero-modern-h1">Create. Share. Connect. <br /> Your <span style={{color: '#4b98b4'}}>Smart Digital Identity.</span></h1>
               <p className="hero-modern-p">Create a modern digital visiting card with instant contact sharing, social media links, WhatsApp integration, QR code access, portfolio showcase, and lead generation features.</p>
               <div className="hero-modern-btns">
                 <Link to="/register" className="btn-modern-primary">Create my card</Link>
-                <a href="#features" className="btn-modern-secondary">Learn More</a>
               </div>
             </div>
           </div>
           <div className="hero-modern-image">
-            <img src="/hero_new.png" alt="Mockup" />
+            <div className="phone-container">
+              <div className="phone-frame phone-1">
+                <div className="phone-screen">
+                  <video 
+                    src="/phone/asss.webm" 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                  />
+                </div>
+              </div>
+              <div className="phone-frame phone-2">
+                <div className="phone-screen">
+                  <img src="/phone/second.png" alt="Reference" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -676,16 +989,19 @@ export default function Home() {
         </div>
         <div className="features-grid reveal">
           {[
-            { icon: 'https://img.icons8.com/fluency/96/layers.png', title: 'Smart Contact Sharing', desc: 'Share your contact details instantly with a single tap or scan. Make networking faster, easier, and more professional.' },
-            { icon: 'https://img.icons8.com/fluency/96/qr-code.png', title: 'Instant QR Access', desc: 'Each digital card comes with a unique QR code for quick sharing. Anyone can scan and save your details in seconds.' },
-            { icon: 'https://img.icons8.com/fluency/96/area-chart.png', title: 'Real-Time Analytics', desc: 'Track profile visits, QR scans, and customer engagement with detailed real-time insights and performance analytics.' },
-            { icon: 'https://img.icons8.com/fluency/96/link.png', title: 'One Link, Everything', desc: 'Showcase your contact info, social media profiles, website, portfolio, and business details — all from one smart link.' },
-            { icon: 'https://img.icons8.com/fluency/96/shield.png', title: 'Privacy & Full Control', desc: 'Update your information anytime and control exactly what you want to share with clients, customers, or connections.' },
+            { icon: 'https://img.icons8.com/fluency/96/layers.png', title: 'Smart Contact Sharing', desc: 'Share your contact details instantly with a single tap or scan. Make networking faster, easier, and more professional.', img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800' },
+            { icon: 'https://img.icons8.com/fluency/96/qr-code.png', title: 'Instant QR Access', desc: 'Each digital card comes with a unique QR code for quick sharing. Anyone can scan and save your details in seconds.', img: 'https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&q=80&w=800' },
+            { icon: 'https://img.icons8.com/fluency/96/area-chart.png', title: 'Real-Time Analytics', desc: 'Track profile visits, QR scans, and customer engagement with detailed real-time insights and performance analytics.', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800' },
+            { icon: 'https://img.icons8.com/fluency/96/link.png', title: 'One Link, Everything', desc: 'Showcase your contact info, social media profiles, website, portfolio, and business details — all from one smart link.', img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800' },
+            { icon: 'https://img.icons8.com/fluency/96/shield.png', title: 'Privacy & Full Control', desc: 'Update your information anytime and control exactly what you want to share with clients, customers, or connections.', img: 'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&q=80&w=800' },
           ].map((f, i) => (
-            <div key={i} className="feature-cell">
-              <div className="feature-icon"><img src={f.icon} alt={f.title} /></div>
-              <h3>{f.title}</h3>
-              <p>{f.desc}</p>
+            <div key={i} className={`feature-cell ${(i === 0 || i === 2 || i === 4) ? 'show-normal-img' : ''}`}>
+              <img src={f.img} className="feature-hover-img" alt="" />
+              <div className="feature-cell-content">
+                <div className="feature-icon"><img src={f.icon} alt={f.title} /></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -701,10 +1017,10 @@ export default function Home() {
         
         <div className="stack-container">
           {[
-            { title: 'Create Your Digital VCard', desc: 'Set up your professional profile with contact details, social links, business information, and branding in just minutes.', icon: 'https://img.icons8.com/fluency/240/paint-palette.png' },
-            { title: 'Customize Your Presence', desc: 'Personalize your digital card with your brand colors, profile image, business details, and professional information.', icon: 'https://img.icons8.com/fluency/240/qr-code.png' },
-            { title: 'Share Anywhere Instantly', desc: 'Share your smart VCard through QR codes, WhatsApp, social media, email, or direct link with a single tap.', icon: 'https://img.icons8.com/fluency/240/vcard.png' },
-            { title: 'Build Better Connections', desc: 'Help clients and customers save your contact instantly while growing your professional network more effectively.', icon: 'https://img.icons8.com/fluency/240/share.png' },
+            { title: 'Create Your Digital VCard', desc: 'Set up your professional profile with contact details, social links, business information, and branding in just minutes.', icon: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800' },
+            { title: 'Customize Your Presence', desc: 'Personalize your digital card with your brand colors, profile image, business details, and professional information.', icon: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=800' },
+            { title: 'Share Anywhere Instantly', desc: 'Share your smart VCard through QR codes, WhatsApp, social media, email, or direct link with a single tap.', icon: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800' },
+            { title: 'Build Better Connections', desc: 'Help clients and customers save your contact instantly while growing your professional network more effectively.', icon: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800' },
           ].map((card, i) => (
             <div key={i} className="stack-card">
               <div className="stack-card-content">
@@ -873,27 +1189,34 @@ export default function Home() {
 
       <footer className="modern-footer">
         <div className="footer-grid">
+          <div className="footer-logo-col">
+            <Link to="/" className="logo">
+              <img src="/favicon.png" alt="Kaira" style={{ width: '40px' }} />
+              Kaira<span>Technologies</span>
+            </Link>
+            <p>Elevate your professional networking with our smart digital business cards. Connect instantly, share seamlessly.</p>
+          </div>
           <div className="footer-col">
             <h5 className="footer-col-title">Product</h5>
             <ul className="footer-links">
-              <li><a href="#features">Features</a></li>
-              <li><a href="#pricing">Pricing</a></li>
-              <li><a href="#how">How it works</a></li>
-              <li><a href="#faq">FAQ</a></li>
+              <li>Features</li>
+              <li>Pricing</li>
+              <li>How it works</li>
+              <li>FAQ</li>
             </ul>
           </div>
           <div className="footer-col">
             <h5 className="footer-col-title">Get Started</h5>
             <ul className="footer-links">
-              <li><Link to="/register">Create Account</Link></li>
-              <li><Link to="/login">Login</Link></li>
+              <li>Create Account</li>
+              <li>Login</li>
             </ul>
           </div>
           <div className="footer-col">
             <h5 className="footer-col-title">Company</h5>
             <ul className="footer-links">
-              <li><a href="#features">About Us</a></li>
-              <li><a href="https://wa.me/916379430293" target="_blank" rel="noreferrer">Contact</a></li>
+              <li>About Us</li>
+              <li>Contact</li>
             </ul>
           </div>
           <div className="footer-col">
@@ -904,8 +1227,15 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <h1 className="big-brand-text">KAIRA</h1>
-        <div style={{ textAlign: 'center', marginTop: '40px', opacity: 0.5 }}>© 2026 Kaira Technology. All rights reserved.</div>
+        <div className="big-brand-text">
+          <div className="marquee-container">
+            <span className="marquee-text">KAIRA</span>
+            <span className="marquee-text">KAIRA</span>
+            <span className="marquee-text">KAIRA</span>
+            <span className="marquee-text">KAIRA</span>
+          </div>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '40px', opacity: 0.5 }}>© 2026 Kaira Technologies. All rights reserved.</div>
       </footer>
 
       <a href="https://wa.me/916379430293" target="_blank" rel="noreferrer" className="floating-whatsapp">

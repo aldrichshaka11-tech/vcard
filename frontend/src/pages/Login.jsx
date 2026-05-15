@@ -27,7 +27,7 @@ export default function Login() {
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
       // Redirect admin to admin panel, others to dashboard
-      window.location.href = res.data.user.role === 'admin' ? '/admin' : '/dashboard'
+      window.location.replace(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
     } catch (err) {
       setError('root', { message: err.response?.data?.error || 'Login failed.' })
     }
@@ -44,7 +44,7 @@ export default function Login() {
         localStorage.removeItem('smartcard_editor')
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('user', JSON.stringify(res.data.user))
-        window.location.href = res.data.user.role === 'admin' ? '/admin' : '/dashboard'
+        window.location.replace(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
       } catch (err) {
         setError('root', { message: err.response?.data?.error || 'Google login failed.' })
       } finally {
@@ -55,10 +55,10 @@ export default function Login() {
   })
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex" style={{ fontFamily: "'Roboto', sans-serif" }}>
 
       {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#4b98b4] flex-col justify-between p-12 relative">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#10b981] flex-col justify-between p-12 relative">
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -102,19 +102,19 @@ export default function Login() {
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#ede7e1]">
         <div className="w-full max-w-md">
 
           {/* Mobile logo */}
           <div className="flex items-center justify-between mb-8 lg:hidden">
             <span className="font-black text-[#1a1a1a] text-2xl uppercase tracking-tighter">KairavCard</span>
-            <Link to="/" className="text-sm text-gray-500 hover:text-[#c14f3e] transition-colors">← Home</Link>
+            <Link to="/" className="text-sm text-[#64748b] hover:text-[#10b981] transition-colors font-bold">← Home</Link>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <div className="mb-7">
-              <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-              <p className="text-gray-500 text-sm mt-1">Sign in to your account to continue</p>
+          <div className="bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 p-8 sm:p-10">
+            <div className="mb-8">
+              <h1 className="text-3xl font-black text-[#0F172A] tracking-tight">Welcome back</h1>
+              <p className="text-[#64748b] text-sm mt-2">Sign in to your account to continue</p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -125,7 +125,7 @@ export default function Login() {
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#10b981] focus:border-transparent transition"
                     {...register('email', { required: 'Email is required.' })}
                   />
                 </div>
@@ -139,7 +139,7 @@ export default function Login() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-10 py-3.5 border border-gray-200 rounded-2xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#10b981] focus:border-transparent transition"
                     {...register('password', { required: 'Password is required.' })}
                   />
                   <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -158,7 +158,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-[#1a1a1a] hover:bg-black disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-sm rounded-full transition shadow-[0_10px_25px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)]"
               >
                 {isSubmitting ? (
                   <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Signing in...</>
@@ -178,18 +178,18 @@ export default function Login() {
               type="button"
               onClick={() => googleLogin()}
               disabled={googleLoading}
-              className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-gray-700 font-medium text-sm rounded-xl transition"
+              className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-[#0F172A] font-bold text-sm rounded-full transition"
             >
               {googleLoading
-                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-indigo-500 rounded-full animate-spin" />
+                ? <div className="w-4 h-4 border-2 border-gray-200 border-t-[#10b981] rounded-full animate-spin" />
                 : GOOGLE_SVG
               }
               Continue with Google
             </button>
 
-            <p className="text-center text-sm text-gray-500 mt-6">
+            <p className="text-center text-sm text-[#64748b] mt-8">
               Don't have an account?{' '}
-              <Link to="/register" className="text-indigo-600 font-semibold hover:text-indigo-700">Create one free</Link>
+              <Link to="/register" className="text-[#10b981] font-bold hover:text-[#367288] transition-colors">Create one free</Link>
             </p>
           </div>
         </div>
