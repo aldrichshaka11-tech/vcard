@@ -239,6 +239,7 @@ export default function PublicCard() {
                     <form onSubmit={handleFormSubmit} className="space-y-2.5">
                       <input
                         required
+                        autoComplete="name"
                         placeholder="Your name"
                         value={form.name}
                         onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
@@ -247,12 +248,15 @@ export default function PublicCard() {
                       <input
                         type="email"
                         required
+                        autoComplete="email"
                         placeholder="Email"
                         value={form.email}
                         onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                         className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-indigo-400"
                       />
                       <input
+                        type="tel"
+                        autoComplete="tel"
                         placeholder="Mobile"
                         value={form.mobile}
                         onChange={e => setForm(f => ({ ...f, mobile: e.target.value }))}
@@ -274,6 +278,9 @@ export default function PublicCard() {
                       >
                         {formStatus === 'sending' ? 'Sending…' : 'Send Message'}
                       </button>
+                      <p className="text-[10px] text-gray-400 text-center leading-tight">
+                        Your information is shared only with the card owner to contact you. We do not sell your data.
+                      </p>
                     </form>
                   )}
                 </div>
