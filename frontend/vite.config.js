@@ -8,10 +8,10 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/backend/api': {
+      '/vcard-api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/backend/, ''),
+        rewrite: (path) => path.replace(/^\/vcard-api/, ''),
       },
     },
   },

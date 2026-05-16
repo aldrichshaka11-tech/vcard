@@ -107,7 +107,7 @@ export default function EditorPublicCard() {
   
   // Dynamic base URL for local vs production
   const uploadsBase = import.meta.env.MODE === 'production'
-    ? `${import.meta.env.VITE_API_BASE?.replace('/api', '') || 'https://kairatechnologies.co.in/demo/vcard'}/uploads/`
+    ? '/uploads/'
     : 'http://localhost:8000/uploads/'
 
   const bgStyle = cardBg

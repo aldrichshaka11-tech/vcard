@@ -103,10 +103,9 @@ export default function ProfileEditor() {
     const safeLinks = Array.isArray(payload.links) ? payload.links : []
     const linkByType = (type) => safeLinks.find((l) => l.type === type)?.url || ''
     const metaByType = (type) => safeLinks.find((l) => l.type === type)?.url || ''
-    const baseUrl = import.meta.env.MODE === 'production'
-      ? (import.meta.env.VITE_API_BASE?.replace('/api', '') || 'https://kairatechnologies.co.in/demo/vcard')
-      : 'http://localhost:8000'
-    const uploadsBase = `${baseUrl}/uploads/`
+    const uploadsBase = import.meta.env.MODE === 'production'
+      ? '/uploads/'
+      : 'http://localhost:8000/uploads/'
     
     // Handle profile photo: check meta_profile first, then main photo field
     const profileFile = metaByType('meta_profile') || payload.photo || ''

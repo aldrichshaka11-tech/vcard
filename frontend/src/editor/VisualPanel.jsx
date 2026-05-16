@@ -44,7 +44,7 @@ function ImageUpload({ label, icon, value, onChange, round }) {
       const filename = res.data?.filename
       if (!filename) throw new Error('No filename in response')
       const baseUrl = import.meta.env.MODE === 'production'
-        ? (import.meta.env.VITE_API_BASE?.replace('/api', '') || '')
+        ? ''
         : 'http://localhost:8000'
       const serverUrl = `${baseUrl}/uploads/${filename}`
       onChange(serverUrl)
@@ -279,7 +279,7 @@ export default function VisualPanel({ card, update, updateNested }) {
                       const res = await api.post('/cards/upload', formData)
                       const filename = res.data.filename
                       const baseUrl = import.meta.env.MODE === 'production'
-                        ? (import.meta.env.VITE_API_BASE?.replace('/api', '') || '')
+                        ? ''
                         : 'http://localhost:8000'
                       const serverUrl = `${baseUrl}/uploads/${filename}`
                       setTimeout(() => {

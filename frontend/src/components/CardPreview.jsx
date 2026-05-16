@@ -26,7 +26,7 @@ export default function CardPreview({ card = {}, editable = false, onLayoutChang
   const [modal, setModal] = useState(null) // null | 'cover' | 'profile' | 'logo' | 'layout' | 'bg'
 
   const uploadsBase = import.meta.env.MODE === 'production'
-    ? `${import.meta.env.VITE_API_BASE?.replace('/api', '') || 'https://kairatechnologies.co.in/demo/vcard'}/uploads/`
+    ? '/uploads/'
     : 'http://localhost:8000/uploads/'
 
   const links = card.links || []

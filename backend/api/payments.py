@@ -26,7 +26,7 @@ payments_bp = Blueprint("payments", __name__)
 
 # ── Plan config ───────────────────────────────────────────────────────────────
 PLANS = {
-    "basic":    {"amount": 100,  "label": "Basic Plan",    "role": "basic",    "days": 30},
+    "basic":    {"amount": 5000,  "label": "Basic Plan",    "role": "basic",    "days": 30},
     "pro":      {"amount": 59900,  "label": "Pro Plan",      "role": "pro",      "days": 30},
     "advanced": {"amount": 99900,  "label": "Advanced Plan", "role": "advanced", "days": 30},
 }
@@ -241,6 +241,7 @@ def initiate_payment(identity):
         "amount":          amount,
         "currency":        "INR",
         "redirectUrl":     f"{cfg['redirect']}?order_id={order_id}",
+        "callbackUrl":     cfg['callback'],
         "paymentFlow":     {"type": "PG_CHECKOUT"},
     }
 
