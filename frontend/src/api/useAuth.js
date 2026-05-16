@@ -28,22 +28,28 @@ export const useAuth = () => {
 
 export function useAuthState() {
   const [user, setUser] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('user') || 'null') } catch { return null }
+    try {
+      const saved = localStorage.getItem('user')
+      if (saved && saved !== 'undefined') return JSON.parse(saved)
+      return null
+    } catch { return null }
   })
   const [features, setFeatures] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (!token) { setLoading(false); return }
+    if (!token || token === 'undefined') { setLoading(false); return }
     const init = async () => {
       try {
         const res = await api.get('/auth/me')
         const freshUser = res.data.user
-        localStorage.setItem('user', JSON.stringify(freshUser))
-        setUser(freshUser)
+        if (freshUser) {
+          localStorage.setItem('user', JSON.stringify(freshUser))
+          setUser(freshUser)
+        }
         // Only fetch features for non-admin users
-        if (freshUser.role !== 'admin') {
+        if (freshUser?.role !== 'admin') {
           try {
             const fr = await api.get('/premium/features')
             setFeatures(fr.data.features)
@@ -56,7 +62,9 @@ export function useAuthState() {
           setUser(null)
         } else {
           const cached = localStorage.getItem('user')
-          if (cached) try { setUser(JSON.parse(cached)) } catch {}
+          if (cached && cached !== 'undefined') {
+            try { setUser(JSON.parse(cached)) } catch {}
+          }
         }
       } finally {
         setLoading(false)
