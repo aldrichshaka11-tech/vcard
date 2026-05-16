@@ -55,7 +55,12 @@ export default function AdminUsers() {
       await axios.put(`/admin/user?id=${userId}`, updates)
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...updates } : u))
       // If the updated user is the currently logged-in admin, sync localStorage
-      const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+      const userStr = localStorage.getItem('user')
+      let currentUser = {}
+      try {
+        if (userStr && userStr !== 'undefined') currentUser = JSON.parse(userStr)
+      } catch {}
+      
       if (currentUser.id === userId) {
         const updated = { ...currentUser, ...updates }
         localStorage.setItem('user', JSON.stringify(updated))

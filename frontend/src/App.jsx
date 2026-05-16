@@ -29,13 +29,16 @@ function GuestRoute({ children }) {
 
   // Check JWT expiry
   try {
+    if (!token || token === 'undefined') return children
     const payload = JSON.parse(atob(token.split('.')[1]))
     if (payload.exp && payload.exp * 1000 < Date.now()) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       return children
     }
-  } catch {}
+  } catch (e) {
+    console.error("Token parse error", e)
+  }
 
   if (loading) return <Spinner />
   if (!user) return children
@@ -61,13 +64,16 @@ function PrivateRoute({ children }) {
 
   // Check JWT expiry
   try {
+    if (!token || token === 'undefined') return <Navigate to="/login" replace />
     const payload = JSON.parse(atob(token.split('.')[1]))
     if (payload.exp && payload.exp * 1000 < Date.now()) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       return <Navigate to="/login" replace />
     }
-  } catch {}
+  } catch (e) {
+    console.error("Token parse error", e)
+  }
 
   if (loading) return <Spinner />
 
@@ -81,7 +87,14 @@ function AdminRoute({ children }) {
   if (!token) return <Navigate to="/login" replace />
   if (loading) return <Spinner />
   // Check localStorage user as fallback during loading
-  const cachedRole = user?.role || JSON.parse(localStorage.getItem('user') || '{}')?.role
+  let cachedRole = user?.role
+  if (!cachedRole) {
+    try {
+      const u = localStorage.getItem('user')
+      if (u && u !== 'undefined') cachedRole = JSON.parse(u)?.role
+    } catch {}
+  }
+  
   if (cachedRole !== 'admin') return <Navigate to="/dashboard" replace />
 
   return children

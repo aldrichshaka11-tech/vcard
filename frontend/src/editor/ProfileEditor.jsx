@@ -340,7 +340,10 @@ export default function ProfileEditor() {
     // Clear localStorage if it belongs to a different user
     const clearIfWrongUser = () => {
       try {
-        const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+        const userStr = localStorage.getItem('user')
+        let currentUser = {}
+        if (userStr && userStr !== 'undefined') currentUser = JSON.parse(userStr)
+        
         const saved = localStorage.getItem('smartcard_editor')
         if (saved && currentUser?.id) {
           const parsed = JSON.parse(saved)

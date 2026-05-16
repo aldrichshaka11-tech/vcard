@@ -24,8 +24,8 @@ export default function Register() {
     try {
       const res = await api.post('/auth/register', data)
       localStorage.removeItem('smartcard_editor')
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('user', JSON.stringify(res.data.user))
+      if (res.data.token) localStorage.setItem('token', res.data.token)
+      if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user))
       window.location.href = res.data.user.role === 'admin' ? '/admin' : '/dashboard'
     } catch (err) {
       setError('root', { message: err.response?.data?.error || 'Registration failed.' })
@@ -41,8 +41,8 @@ export default function Register() {
         }).then(r => r.json())
         const res = await api.post('/auth/google', { credential: tokenResponse.access_token, userInfo })
         localStorage.removeItem('smartcard_editor')
-        localStorage.setItem('token', res.data.token)
-        localStorage.setItem('user', JSON.stringify(res.data.user))
+        if (res.data.token) localStorage.setItem('token', res.data.token)
+        if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user))
         window.location.href = res.data.user.role === 'admin' ? '/admin' : '/dashboard'
       } catch (err) {
         setError('root', { message: err.response?.data?.error || 'Google signup failed.' })

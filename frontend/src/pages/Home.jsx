@@ -51,30 +51,30 @@ export default function Home() {
   }, [])
 
   const testimonials = [
-    { 
-      name: 'Sophia Anderson', 
-      role: 'Marketing Director', 
+    {
+      name: 'Sophia Anderson',
+      role: 'Marketing Director',
       initial: 'SA',
       color: '#4b98b4',
       text: '"Their digital business card platform made a huge impact on our team\'s networking. We listened to our goals, crafted a strong strategy, and delivered consistent results. A trusted partner for any business."'
     },
-    { 
-      name: 'Suresh Pandian', 
-      role: 'Sales Director', 
+    {
+      name: 'Suresh Pandian',
+      role: 'Sales Director',
       initial: 'SP',
       color: '#4b98b4',
       text: '"Kaira completely changed how I network. I shared my card with 40 people at a conference and got 15 follow-up messages the same day. Memorable impressions every time."'
     },
-    { 
-      name: 'Priya Muthukumar', 
-      role: 'Founder, Madurai', 
+    {
+      name: 'Priya Muthukumar',
+      role: 'Founder, Madurai',
       initial: 'PM',
       color: '#4b98b4',
       text: '"The analytics dashboard is a game-changer. I can see exactly when someone views my card and follow up at the right time. Incredibly smooth transition from paper cards."'
     },
-    { 
-      name: 'Vijay Raghunathan', 
-      role: 'HR Head', 
+    {
+      name: 'Vijay Raghunathan',
+      role: 'HR Head',
       initial: 'VR',
       color: '#4b98b4',
       text: '"We rolled out Kaira for our team in one afternoon. The brand consistency and the admin panel made it incredibly smooth and professional."'
@@ -96,41 +96,47 @@ export default function Home() {
 
         /* Navigation */
         .landing-page nav { 
-          position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+          position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100; 
+          width: 92%; max-width: 1200px;
           display: flex; align-items: center; justify-content: space-between; 
-          padding: 16px 60px; background: rgba(255, 255, 255, 0.95); 
-          backdrop-filter: blur(20px); border-bottom: 1px solid rgba(193, 79, 62, 0.1);
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;
+          padding: 12px 32px; background: rgba(255, 255, 255, 0.75); 
+          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 100px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .landing-page nav.scrolled { padding: 12px 60px; }
+        .landing-page nav.scrolled { 
+          top: 10px; padding: 10px 32px; background: rgba(255, 255, 255, 0.9);
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08); 
+        }
         .landing-page .logo { 
-          font-weight: 800; font-size: 22px; color: #0F172A; 
+          font-weight: 900; font-size: 22px; color: #0F172A; 
           text-decoration: none; display: flex; align-items: center; gap: 8px;
+          letter-spacing: -0.5px;
         }
-        .landing-page .logo span { color: #4b98b4; }
-        .landing-page .nav-links { display: flex; gap: 48px; list-style: none; align-items: center; }
-        .landing-page .nav-links a {
-          text-decoration: none; color: #444; font-weight: 500; font-size: 15px; transition: 0.3s;
-          position: relative; padding: 5px 0;
+        .landing-page .logo span { color: #4b98b4; font-weight: 700; }
+        
+        .landing-page .nav-links { display: flex; gap: 8px; list-style: none; align-items: center; margin: 0; padding: 0; }
+        
+        .landing-page .nav-links li a:not(.nav-cta) {
+          text-decoration: none; color: #475569; font-weight: 600; font-size: 15px; 
+          padding: 10px 20px; border-radius: 50px; transition: all 0.3s ease;
         }
-
-        .landing-page .nav-links a::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background-color: #4b98b4;
-          transition: width 0.3s ease;
+        
+        .landing-page .nav-links li a:not(.nav-cta):hover { 
+          color: #0F172A; background: rgba(75, 152, 180, 0.1); 
         }
-
-        .landing-page .nav-links a:hover { color: #4b98b4; }
-        .landing-page .nav-links a:hover::after { width: 100%; }
+        
         .landing-page .nav-cta { 
-          background: #4b98b4 !important; color: #fff !important; 
-          padding: 12px 28px; border-radius: 50px; font-weight: 600 !important; 
-          text-decoration: none;
+          background: #0F172A !important; color: #fff !important; 
+          padding: 12px 32px; border-radius: 50px; font-weight: 700 !important; 
+          text-decoration: none; font-size: 15px;
+          transition: all 0.3s ease !important;
+          box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2);
+        }
+        .landing-page .nav-cta:hover {
+          background: #4b98b4 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(75, 152, 180, 0.3);
         }
 
         .landing-page .menu-toggle {
@@ -144,6 +150,7 @@ export default function Home() {
         }
 
         @media (max-width: 991px) {
+          .landing-page nav { top: 10px; width: 95%; padding: 12px 24px; }
           .landing-page .menu-toggle { display: block; }
           .landing-page .nav-links {
             position: fixed;
@@ -161,7 +168,7 @@ export default function Home() {
             padding: 80px 20px;
           }
           .landing-page .nav-links.open { right: 0; }
-          .landing-page .nav-links a { font-size: 20px; font-weight: 700; color: #0F172A; }
+          .landing-page .nav-links li a:not(.nav-cta) { font-size: 20px; font-weight: 700; color: #0F172A; padding: 15px 30px; }
           .landing-page .nav-cta { width: 100%; text-align: center; font-size: 18px; padding: 18px; }
         }
 
@@ -850,6 +857,25 @@ export default function Home() {
           line-height: 1.6;
         }
 
+        .landing-page .stack-card-content {
+          flex: 1;
+        }
+
+        .landing-page .stack-card-icon {
+          flex: 1;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .landing-page .stack-card-icon img {
+          width: 100%;
+          max-width: 450px;
+          height: 340px;
+          object-fit: cover;
+          border-radius: 24px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
         @media (max-width: 991px) {
           .landing-page .stacking-section { padding: 60px 24px; }
           .landing-page .stack-card { padding: 40px; min-height: 400px; flex-direction: column; text-align: center; gap: 30px; margin-bottom: 150px; }
@@ -857,6 +883,9 @@ export default function Home() {
           .landing-page .stack-card:nth-child(2) { top: 100px; }
           .landing-page .stack-card:nth-child(3) { top: 120px; }
           .landing-page .stack-card:nth-child(4) { top: 140px; }
+          
+          .landing-page .stack-card-icon { justify-content: center; width: 100%; }
+          .landing-page .stack-card-icon img { height: 260px; }
         }
 
         @media (max-width: 991px) {
@@ -951,7 +980,7 @@ export default function Home() {
           <div style={{ flex: 1, minWidth: '300px' }}>
             <div className="hero-modern-content">
               <div className="hero-badge"><span>✧</span> #1 Smart Digital Business Card Platform</div>
-              <h1 className="hero-modern-h1">Create. Share. Connect. <br /> Your <span style={{color: '#4b98b4'}}>Smart Digital Identity.</span></h1>
+              <h1 className="hero-modern-h1">Create. Share. Connect. <br /> Your <span style={{ color: '#4b98b4' }}>Smart Digital Identity.</span></h1>
               <p className="hero-modern-p">Create a modern digital visiting card with instant contact sharing, social media links, WhatsApp integration, QR code access, portfolio showcase, and lead generation features.</p>
               <div className="hero-modern-btns">
                 <Link to="/register" className="btn-modern-primary">Create my card</Link>
@@ -962,12 +991,12 @@ export default function Home() {
             <div className="phone-container">
               <div className="phone-frame phone-1">
                 <div className="phone-screen">
-                  <video 
-                    src="/phone/asss.webm" 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
+                  <video
+                    src="/phone/asss.webm"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
                   />
                 </div>
               </div>
@@ -1014,13 +1043,13 @@ export default function Home() {
           <h2 className="section-title">Get Your Digital VCard Ready in <span className="text-gradient">3 Minutes</span></h2>
           <p className="section-desc">Create, customize, and start sharing your professional identity with a modern digital networking experience.</p>
         </div>
-        
+
         <div className="stack-container">
           {[
-            { title: 'Create Your Digital VCard', desc: 'Set up your professional profile with contact details, social links, business information, and branding in just minutes.', icon: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800' },
-            { title: 'Customize Your Presence', desc: 'Personalize your digital card with your brand colors, profile image, business details, and professional information.', icon: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=800' },
-            { title: 'Share Anywhere Instantly', desc: 'Share your smart VCard through QR codes, WhatsApp, social media, email, or direct link with a single tap.', icon: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800' },
-            { title: 'Build Better Connections', desc: 'Help clients and customers save your contact instantly while growing your professional network more effectively.', icon: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800' },
+            { title: 'Create Your Digital VCard', desc: 'Set up your professional profile with contact details, social links, business information, and branding in just minutes.', icon: '/process/create.png' },
+            { title: 'Customize Your Presence', desc: 'Personalize your digital card with your brand colors, profile image, business details, and professional information.', icon: '/process/customize.png' },
+            { title: 'Share Anywhere Instantly', desc: 'Share your smart VCard through QR codes, WhatsApp, social media, email, or direct link with a single tap.', icon: '/process/share.png' },
+            { title: 'Build Better Connections', desc: 'Help clients and customers save your contact instantly while growing your professional network more effectively.', icon: '/process/connect.png' },
           ].map((card, i) => (
             <div key={i} className="stack-card">
               <div className="stack-card-content">
@@ -1065,7 +1094,7 @@ export default function Home() {
           <div className="testi-initial-wrapper" style={{ background: testimonials[testiIndex].color }}>
             {testimonials[testiIndex].initial}
           </div>
-          
+
           <div className="testi-bubble">
             <p className="testi-quote-text">{testimonials[testiIndex].text}</p>
             <div className="testi-author-info">
@@ -1089,20 +1118,20 @@ export default function Home() {
           <h2 className="section-title">Ready to Upgrade Your <span className="text-gradient">Networking?</span></h2>
           <p className="section-desc">Choose the plan that best fits your professional needs.</p>
         </div>
-        
+
         <div className="pricing-grid reveal">
           {[
-            { 
-              name: 'Basic', price: '299', icon: 'https://img.icons8.com/fluency/96/flash-on.png', 
+            {
+              name: 'Basic', price: '299', icon: 'https://img.icons8.com/fluency/96/flash-on.png',
               features: ['1 Digital Card', 'Profile Photo', '5 Social Links', '7-day Analytics', 'QR Code Share'],
               disabled: ['Cover & Logo Photo', 'Custom Colors', 'Lead Capture', 'Virtual Background', 'CSV Export']
             },
-            { 
+            {
               name: 'Pro', price: '599', icon: 'https://img.icons8.com/fluency/96/crown.png', popular: true,
               features: ['3 Digital Cards', 'Profile Photo', 'Unlimited Links', '30-day Analytics', 'QR Code Share', 'Cover & Logo Photo', 'Custom Colors', 'Lead Capture'],
               disabled: ['Virtual Background', 'CSV Export']
             },
-            { 
+            {
               name: 'Advanced', price: '999', icon: 'https://img.icons8.com/fluency/96/rocket.png',
               features: ['Unlimited Cards', 'Profile Photo', 'Unlimited Links', 'Full Analytics History', 'QR Code Share', 'Cover & Logo Photo', 'Custom Colors', 'Lead Capture', 'Virtual Background', 'CSV Export'],
               disabled: []
@@ -1113,7 +1142,7 @@ export default function Home() {
               <div className="plan-icon"><img src={plan.icon} alt={plan.name} style={{ width: '32px' }} /></div>
               <h3 className="plan-name">{plan.name}</h3>
               <div className="plan-price">₹{plan.price}<span>/month</span></div>
-              
+
               <ul className="features-list">
                 {plan.features.map((f, j) => (
                   <li key={j} className="feature-item">
@@ -1132,8 +1161,8 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              
-              <Link to="/register" className="pricing-cta" style={{display:'block', textAlign:'center', textDecoration:'none'}}>Upgrade to {plan.name}</Link>
+
+              <Link to="/register" className="pricing-cta" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Upgrade to {plan.name}</Link>
             </div>
           ))}
         </div>
@@ -1145,7 +1174,7 @@ export default function Home() {
           <div className="section-label">✦ FAQS ✦</div>
           <h2 className="section-title">Have Questions in Your Mind?<br />Get the <span className="text-gradient">Answers Now</span></h2>
         </div>
-        
+
         <div className="faq-grid reveal">
           {[
             { q: "What is a digital business card?", a: "A digital business card is a modern, eco-friendly way to share your professional information via a QR code or a link, instantly savable to contacts." },
@@ -1178,7 +1207,7 @@ export default function Home() {
         <div className="final-cta-card reveal">
           <h2>Your First Impressions are in <span className="text-gradient">Safe Hands</span> 🏆</h2>
           <p>
-            We handle the digital infrastructure so you can focus on building relationships. 
+            We handle the digital infrastructure so you can focus on building relationships.
             Trusted digital vcard solution serving professionals worldwide.
           </p>
           <Link to="/register" className="final-cta-btn">

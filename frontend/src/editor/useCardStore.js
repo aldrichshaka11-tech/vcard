@@ -55,7 +55,11 @@ export function useCardStore() {
   })
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    const userStr = localStorage.getItem('user')
+    let user = {}
+    try {
+      if (userStr && userStr !== 'undefined') user = JSON.parse(userStr)
+    } catch {}
     localStorage.setItem('smartcard_editor', JSON.stringify({ ...card, _userId: user?.id }))
   }, [card])
 

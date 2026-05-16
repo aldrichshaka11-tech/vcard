@@ -24,8 +24,8 @@ export default function Login() {
     try {
       const res = await api.post('/auth/login', data)
       localStorage.removeItem('smartcard_editor')
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('user', JSON.stringify(res.data.user))
+      if (res.data.token) localStorage.setItem('token', res.data.token)
+      if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user))
       // Redirect admin to admin panel, others to dashboard
       window.location.replace(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
     } catch (err) {
@@ -42,8 +42,8 @@ export default function Login() {
         }).then(r => r.json())
         const res = await api.post('/auth/google', { credential: tokenResponse.access_token, userInfo })
         localStorage.removeItem('smartcard_editor')
-        localStorage.setItem('token', res.data.token)
-        localStorage.setItem('user', JSON.stringify(res.data.user))
+        if (res.data.token) localStorage.setItem('token', res.data.token)
+        if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user))
         window.location.replace(res.data.user.role === 'admin' ? '/admin' : '/dashboard')
       } catch (err) {
         setError('root', { message: err.response?.data?.error || 'Google login failed.' })
