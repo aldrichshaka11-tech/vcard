@@ -204,5 +204,7 @@ def _run_migrations():
 _run_migrations()
 
 if __name__ == "__main__":
+    # Ensure production environment variables are respected
     debug = os.getenv("FLASK_DEBUG", "0") == "1"
-    app.run(debug=debug, port=8000)
+    port = int(os.getenv("PORT", 8000))
+    app.run(debug=debug, host="0.0.0.0", port=port)
