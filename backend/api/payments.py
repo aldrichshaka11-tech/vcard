@@ -64,17 +64,17 @@ def _bridge_secret():
 
 def _bridge_headers():
     return {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     }
 
 def _bridge_initiate(payload: dict) -> requests.Response:
     return requests.post(
         _bridge_url(),
-        data={
+        json={
             "action":  "initiate",
             "secret":  _bridge_secret(),
-            "payload": json.dumps(payload),
+            "payload": payload,
         },
         headers=_bridge_headers(),
         timeout=15,
@@ -82,18 +82,20 @@ def _bridge_initiate(payload: dict) -> requests.Response:
 
 def _bridge_status(order_id: str) -> dict | None:
     try:
+        cfg = _cfg()
         resp = requests.post(
             _bridge_url(),
-            data={
+            json={
                 "action":   "status",
                 "secret":   _bridge_secret(),
                 "order_id": order_id,
+                "payload":  {"merchantId": cfg["id"]} # Required by current PHP bridge for getToken
             },
             headers=_bridge_headers(),
             timeout=10,
         )
         if resp.status_code == 200:
-            return resp.json().get("state")
+            return resp.json()
     except Exception:
         logger.exception("Bridge status call failed order=%s", order_id)
     return None
@@ -237,9 +239,11 @@ def initiate_payment(identity):
         return json_error(500, "Payment gateway not configured.")
 
     payload = {
+        "merchantId":      cfg['id'],
         "merchantOrderId": order_id,
         "amount":          amount,
         "currency":        "INR",
+        "env":             cfg['env'],
         "redirectUrl":     f"{cfg['redirect']}?order_id={order_id}",
         "callbackUrl":     cfg['callback'],
         "paymentFlow":     {"type": "PG_CHECKOUT"},
