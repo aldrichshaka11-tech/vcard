@@ -34,10 +34,11 @@ PLANS = {
 # ── PhonePe v2 config — read lazily so load_dotenv() always runs first ───────
 def _cfg():
     return {
-        "env":     os.getenv("PHONEPE_ENV", "PRODUCTION").upper(),
-        "id":      os.getenv("PHONEPE_CLIENT_ID", "").strip(),
-        "secret":  os.getenv("PHONEPE_CLIENT_SECRET", "").strip(),
-        "version": int(os.getenv("PHONEPE_CLIENT_VERSION", "1").strip()),
+        "env":      os.getenv("PHONEPE_ENV", "PRODUCTION").upper(),
+        "mid":      os.getenv("PHONEPE_MERCHANT_ID", "").strip(),
+        "id":       os.getenv("PHONEPE_CLIENT_ID", "").strip(),
+        "secret":   os.getenv("PHONEPE_CLIENT_SECRET", "").strip(),
+        "version":  int(os.getenv("PHONEPE_CLIENT_VERSION", "1").strip()),
         "redirect": os.getenv("PHONEPE_REDIRECT_URL", "http://localhost:5173/payment/success"),
         "callback": os.getenv("PHONEPE_CALLBACK_URL", ""),
     }
@@ -89,7 +90,7 @@ def _bridge_status(order_id: str) -> dict | None:
                 "action":   "status",
                 "secret":   _bridge_secret(),
                 "order_id": order_id,
-                "payload":  {"merchantId": cfg["id"]} # Required by current PHP bridge for getToken
+                "payload":  {"merchantId": cfg["mid"] or cfg["id"]} # Required by current PHP bridge for getToken
             },
             headers=_bridge_headers(),
             timeout=10,
@@ -239,7 +240,7 @@ def initiate_payment(identity):
         return json_error(500, "Payment gateway not configured.")
 
     payload = {
-        "merchantId":      cfg['id'],
+        "merchantId":      cfg['mid'] or cfg['id'],
         "merchantOrderId": order_id,
         "amount":          amount,
         "currency":        "INR",
